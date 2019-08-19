@@ -12,7 +12,6 @@
         BNavItem(to="/posts" active-class="active") Posts
         BNavItem(to="/users" active-class="active") Users
         BNavItem(to="/media" active-class="active") Media
-        BNavItem(to="/login" active-class="active") Login
         BNavItem(to="/logout" active-class="active") Logout
 </template>
 
