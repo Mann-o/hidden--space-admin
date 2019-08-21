@@ -5,6 +5,7 @@ import build from './config/build'
 import head from './config/head'
 import loading from './config/loading'
 import modules from './config/modules'
+import plugins from './config/plugins'
 import proxy from './config/proxy'
 import render from './config/render'
 import router from './config/router'
@@ -18,6 +19,7 @@ export default {
   head,
   loading,
   modules,
+  plugins,
   proxy,
   render,
   router,

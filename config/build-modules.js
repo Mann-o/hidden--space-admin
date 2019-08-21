@@ -1,1 +1,1 @@
-export default ['@nuxtjs/eslint-module']
+export default ['@nuxt/typescript-build', '@nuxtjs/eslint-module']

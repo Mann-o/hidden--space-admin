@@ -1,4 +1,4 @@
-export default ({ app: { $auth, $axios } }) => {
+export default ({ app: { _$auth, $axios } }) => {
   // Request interceptor
   $axios.onRequest((config) => {
     // Not used for anything yet - maybe later!
