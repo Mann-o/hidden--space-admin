@@ -17,7 +17,7 @@ export default {
   }),
 
   computed: {
-    crumbs() {
+    crumbs () {
       return [
         { text: 'Media', to: '/media' },
         {
@@ -28,7 +28,7 @@ export default {
     },
   },
 
-  async asyncData({ app: { $axios }, params }) {
+  async asyncData ({ app: { $axios }, params }) {
     const { data: media } = await $axios.get(
       `http://localhost:3333/api/v1/media/${params.hash}`
     )

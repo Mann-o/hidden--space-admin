@@ -37,7 +37,7 @@ export default {
   }),
 
   computed: {
-    crumbs() {
+    crumbs () {
       return [
         { text: 'Spaces', to: '/spaces' },
         {
@@ -48,15 +48,13 @@ export default {
     },
   },
 
-  async asyncData({ app: { $axios }, params }) {
-    const { data: space } = await $axios.get(
-      `http://localhost:3333/api/v1/spaces/${params.slug}`
-    )
+  async asyncData ({ app: { $axios }, params }) {
+    const { data: space } = await $axios.get(`http://localhost:3333/api/v1/spaces/${params.slug}`)
     return { space }
   },
 
   methods: {
-    async saveSpace() {
+    async saveSpace () {
       this.isSaving = true
       try {
         const {

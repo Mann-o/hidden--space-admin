@@ -17,7 +17,7 @@ export default {
   }),
 
   computed: {
-    crumbs() {
+    crumbs () {
       return [
         { text: 'Users', to: '/users' },
         {
@@ -28,10 +28,8 @@ export default {
     },
   },
 
-  async asyncData({ app: { $axios }, params }) {
-    const { data: user } = await $axios.get(
-      `http://localhost:3333/api/v1/users/${params.username}`
-    )
+  async asyncData ({ app: { $axios }, params }) {
+    const { data: user } = await $axios.get(`http://localhost:3333/api/v1/users/${params.username}`)
     return { user }
   },
 }

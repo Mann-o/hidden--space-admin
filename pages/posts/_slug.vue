@@ -17,18 +17,13 @@ export default {
   }),
 
   computed: {
-    crumbs() {
-      return [
-        { text: 'Posts', to: '/posts' },
-        { text: this.post == null ? '' : this.post.title, active: true },
-      ]
+    crumbs () {
+      return [{ text: 'Posts', to: '/posts' }, { text: this.post == null ? '' : this.post.title, active: true }]
     },
   },
 
-  async asyncData({ app: { $axios }, params }) {
-    const { data: post } = await $axios.get(
-      `http://localhost:3333/api/v1/posts/${params.slug}`
-    )
+  async asyncData ({ app: { $axios }, params }) {
+    const { data: post } = await $axios.get(`http://localhost:3333/api/v1/posts/${params.slug}`)
     return { post }
   },
 }

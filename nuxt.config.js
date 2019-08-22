@@ -2,6 +2,7 @@ import auth from './config/auth'
 import axios from './config/axios'
 import buildModules from './config/build-modules'
 import build from './config/build'
+import css from './config/css'
 import head from './config/head'
 import loading from './config/loading'
 import modules from './config/modules'
@@ -16,6 +17,7 @@ export default {
   axios,
   buildModules,
   build: Object.assign({ watch: ['config'] }, build),
+  css,
   head,
   loading,
   modules,

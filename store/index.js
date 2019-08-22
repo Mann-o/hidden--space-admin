@@ -3,7 +3,7 @@ export const state = () => ({
 })
 
 export const actions = {
-  nuxtServerInit() {
+  nuxtServerInit () {
     // nothing here yet
   },
 }

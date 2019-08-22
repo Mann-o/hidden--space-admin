@@ -44,7 +44,7 @@ export default {
     media: [],
   }),
 
-  async asyncData({ app: { $axios } }) {
+  async asyncData ({ app: { $axios } }) {
     const { data: media } = await $axios.get(
       'http://localhost:3333/api/v1/media'
     )

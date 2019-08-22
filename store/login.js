@@ -7,31 +7,31 @@ export const state = () => ({
 })
 
 export const actions = {
-  updateLoginId({ commit }, newLoginId) {
+  updateLoginId ({ commit }, newLoginId) {
     commit('UPDATE_LOGIN_ID', newLoginId)
   },
-  updatePassword({ commit }, newPassword) {
+  updatePassword ({ commit }, newPassword) {
     commit('UPDATE_PASSWORD', newPassword)
   },
-  startLoading({ commit }) {
+  startLoading ({ commit }) {
     commit('START_LOGGING_IN')
   },
-  stopLoading({ commit }) {
+  stopLoading ({ commit }) {
     commit('STOP_LOGGING_IN')
   },
 }
 
 export const mutations = {
-  START_LOGGING_IN(state) {
+  START_LOGGING_IN (state) {
     state.isLoggingIn = true
   },
-  STOP_LOGGING_IN(state) {
+  STOP_LOGGING_IN (state) {
     state.isLoggingIn = false
   },
-  UPDATE_LOGIN_ID(state, loginId) {
+  UPDATE_LOGIN_ID (state, loginId) {
     state.credentials.loginId = loginId
   },
-  UPDATE_PASSWORD(state, newPassword) {
+  UPDATE_PASSWORD (state, newPassword) {
     state.credentials.password = newPassword
   },
 }

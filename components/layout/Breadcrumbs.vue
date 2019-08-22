@@ -16,7 +16,7 @@ export default {
   },
 
   computed: {
-    crumbsWithHome() {
+    crumbsWithHome () {
       return [
         {
           text: 'Home',

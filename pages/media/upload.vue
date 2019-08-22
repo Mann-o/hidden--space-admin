@@ -35,13 +35,13 @@ export default {
   }),
 
   computed: {
-    hasFiles() {
+    hasFiles () {
       return Boolean(this.files != null && this.files.length)
     },
   },
 
   methods: {
-    async onSubmit() {
+    async onSubmit () {
       const formData = new FormData()
       for (const file of this.files) {
         formData.append('files[]', file)
@@ -70,7 +70,7 @@ export default {
       }
       this.isUploading = false
     },
-    onReset() {
+    onReset () {
       this.files = null
     },
   },

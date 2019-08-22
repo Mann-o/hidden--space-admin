@@ -34,10 +34,8 @@ export default {
     users: [],
   }),
 
-  async asyncData({ app: { $axios } }) {
-    const { data: users } = await $axios.get(
-      'http://localhost:3333/api/v1/users'
-    )
+  async asyncData ({ app: { $axios } }) {
+    const { data: users } = await $axios.get('http://localhost:3333/api/v1/users')
     return { users }
   },
 }

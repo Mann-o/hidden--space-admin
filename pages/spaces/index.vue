@@ -41,10 +41,9 @@
         BFormGroup(label="City" label-for="city" label-cols="3")
           BFormInput(id="city" v-model="newSpace.city")
       .w-100(slot="modal-footer")
-        BButton.float-right(type="submit" variant="primary" :disabled="newSpaceSaving")
+        BButton.float-right(@click="saveNewSpace" variant="primary" :disabled="newSpaceSaving")
           span {{ newSpaceSaving ? 'Saving' : 'Save' }}
           BSpinner(v-if="newSpaceSaving" small)
-
 </template>
 
 <script>
@@ -79,22 +78,18 @@ export default {
     newSpaceSaving: false,
   }),
 
-  async asyncData({ app: { $axios } }) {
-    const { data: spaces } = await $axios.get(
-      'http://localhost:3333/api/v1/spaces'
-    )
+  async asyncData ({ app: { $axios } }) {
+    const { data: spaces } = await $axios.get('http://localhost:3333/api/v1/spaces')
     return { spaces }
   },
 
   methods: {
-    async getSpaces() {
+    async getSpaces () {
       this.spaces = []
-      const { data: spaces } = await this.$axios.get(
-        'http://localhost:3333/api/v1/spaces'
-      )
+      const { data: spaces } = await this.$axios.get('http://localhost:3333/api/v1/spaces')
       this.spaces = spaces
     },
-    async deleteSpace(space) {
+    async deleteSpace (space) {
       const doDelete = await this.$bvModal.msgBoxConfirm(
         `Are you sure you wish to delete this Space? This operation is irreversible!`,
         {
@@ -119,6 +114,33 @@ export default {
             variant: 'success',
           })
         }
+      }
+    },
+    async saveNewSpace () {
+      this.newSpaceSaving = true
+      try {
+        const {
+          data: { status },
+        } = await this.$axios.post('/api/spaces', this.newSpace)
+        if (status === 'success') {
+          this.$bvToast.toast('Space created successfully!', {
+            title: 'Success',
+            autoHideDelay: 5000,
+            variant: 'success',
+          })
+          this.$bvModal.hide('new-space-modal')
+          this.getSpaces()
+        } else {
+          throw new Error('error')
+        }
+      } catch (error) {
+        this.$bvToast.toast('An error occured whilst trying to save this Space.', {
+          title: 'Error',
+          autoHideDelay: 5000,
+          variant: 'danger',
+        })
+      } finally {
+        this.newSpaceSaving = false
       }
     },
   },

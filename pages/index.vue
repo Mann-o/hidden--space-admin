@@ -22,7 +22,7 @@ export default {
   }),
 
   computed: {
-    counters() {
+    counters () {
       return [
         { to: '/spaces', label: 'Spaces', count: this.spaceCount },
         { to: '/therapists', label: 'Therapists', count: this.therapistCount },
@@ -33,10 +33,8 @@ export default {
     },
   },
 
-  async asyncData({ app: { $axios } }) {
-    const {
-      data: { spaceCount, therapistCount, postCount, userCount, mediaCount },
-    } = await $axios.get('http://localhost:3333/api/v1/')
+  async asyncData ({ app: { $axios } }) {
+    const { data: { spaceCount, therapistCount, postCount, userCount, mediaCount } } = await $axios.get('http://localhost:3333/api/v1/')
     return {
       spaceCount,
       therapistCount,

@@ -13,12 +13,12 @@ export default {
     backgroundImage: null,
   }),
 
-  mounted() {
+  mounted () {
     this.chooseRandomBackgroundImage()
   },
 
   methods: {
-    chooseRandomBackgroundImage() {
+    chooseRandomBackgroundImage () {
       const randomNumber = Math.ceil(Math.random() * 10)
       this.backgroundImage = `url(/images/login-wallpapers/wallpaper-${randomNumber}.jpg)`
     },

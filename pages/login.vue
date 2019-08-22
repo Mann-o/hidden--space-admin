@@ -47,7 +47,7 @@ export default {
       'startLoading',
       'stopLoading',
     ]),
-    async doLogin() {
+    async doLogin () {
       this.$nuxt.$loading.start()
       this.startLoading()
       try {
@@ -65,7 +65,7 @@ export default {
       this.stopLoading()
       this.$nuxt.$loading.finish()
     },
-    onReset() {
+    onReset () {
       alert('reset')
     },
   },

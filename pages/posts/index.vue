@@ -24,17 +24,12 @@ export default {
 
   data: () => ({
     crumbs: [{ text: 'Posts', active: true }],
-    fields: [
-      { key: 'slug', sortable: true },
-      { key: 'actions', label: 'Actions' },
-    ],
+    fields: [{ key: 'slug', sortable: true }, { key: 'actions', label: 'Actions' }],
     posts: [],
   }),
 
-  async asyncData({ app: { $axios } }) {
-    const { data: posts } = await $axios.get(
-      'http://localhost:3333/api/v1/posts'
-    )
+  async asyncData ({ app: { $axios } }) {
+    const { data: posts } = await $axios.get('http://localhost:3333/api/v1/posts')
     return { posts }
   },
 }

@@ -7,7 +7,7 @@
 export default {
   name: 'PageLogout',
 
-  mounted() {
+  mounted () {
     this.$auth.logout()
   },
 }
