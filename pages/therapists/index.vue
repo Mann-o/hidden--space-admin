@@ -52,6 +52,8 @@
         BButton.float-right(@click="saveNewTherapist" variant="primary" :disabled="newTherapistSaving")
           span {{ newTherapistSaving ? 'Saving' : 'Save' }}
           BSpinner(v-if="newTherapistSaving" small)
+        BButton.float-right.mr-2(@click="cancelNewTherapist" :disabled="newTherapistSaving")
+          span Cancel
 
     ModalGallery(title="Select Therapist Profile Image" :selected="selectedImageId" @select="selectImage")
 </template>
@@ -181,6 +183,21 @@ export default {
     selectImage (image) {
       this.selectedImage = image
       this.newTherapist.image_id = image.id
+    },
+    cancelNewTherapist () {
+      this.newTherapist = {
+        slug: null,
+        gender: 'male',
+        title: null,
+        firstNames: null,
+        lastNames: null,
+        emailAddress: null,
+        telephoneNumber: null,
+        biography: null,
+        imageId: null,
+      }
+      this.$bvModal.hide('new-therapist-modal')
+      this.selectedImage = null
     },
   },
 }

@@ -1,3 +1,5 @@
+const isProduction = (process.env.NODE_ENV === 'production')
+
 module.exports = {
   root: true,
   env: {
@@ -13,8 +15,12 @@ module.exports = {
     'plugin:nuxt/recommended',
   ],
   rules: {
-    'comma-dangle': ['error', 'always-multiline'],
-    'no-console': 'off',
     'arrow-parens': ['error', 'always'],
+    'comma-dangle': ['error', 'always-multiline'],
+    'no-alert': isProduction ? 'error' : 'off',
+    'no-console': isProduction ? 'error' : 'off',
+    'no-debugger': isProduction ? 'error' : 'off',
+    'space-before-function-paren': ['warn', 'always'],
+    'nuxt/no-env-in-hooks': 'off',
   },
 }

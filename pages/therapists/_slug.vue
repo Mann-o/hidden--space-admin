@@ -24,14 +24,15 @@
             BFormGroup(label="Telephone Number" label-for="telephoneNumber" label-cols="2")
               BFormInput(id="telephoneNumber" v-model="therapist.telephoneNumber")
             BFormGroup(label="Profile Image" label-for="imageId" label-cols="2")
-              img(v-if="therapist.image != null" :src="therapist.image.url" style="max-width:4rem;max-height:4rem;margin-right:2rem" @click="therapist.image = null")
+              tempate(v-if="therapist.image != null")
+                img(:src="therapist.image.url" style="max-width:4rem;max-height:4rem;margin-right:2rem" @click="therapist.image = null")
+                BButton(v-b-modal.browse-images-modal variant="primary") {{ therapist.image != null ? 'Change' : 'Browse' }}...
               template(v-if="therapist.image == null")
                 img(v-if="selectedImage != null" :src="selectedImage.url" style="max-width:4rem;max-height:4rem;margin-right:2rem" @click="selectedImage = null")
                 BButton(v-b-modal.browse-images-modal variant="primary") {{ selectedImage != null ? 'Change' : 'Browse' }}...
               BFormInput(id="imageId" v-model="therapist.imageId" hidden)
             BFormGroup(label="Biography" label-for="biography" label-cols="2")
               quill(id="biography" v-model="therapist.biography" output="html" :config="quillConfig")
-          .w-100(slot="modal-footer")
             BFormGroup
               BButton(type="submit" variant="primary" :disabled="isSaving")
                 span Save Changes
@@ -118,6 +119,7 @@ export default {
     },
     selectImage (image) {
       this.selectedImage = image
+      this.therapist.image = image
       this.therapist.imageId = image.id
     },
   },

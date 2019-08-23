@@ -43,9 +43,9 @@ export default {
   methods: {
     async onSubmit () {
       const formData = new FormData()
-      for (const file of this.files) {
+      this.files.forEach((file) => {
         formData.append('files[]', file)
-      }
+      })
       this.isUploading = true
       const { data } = await this.$axios.post(
         'http://localhost:3333/api/v1/media/upload',
