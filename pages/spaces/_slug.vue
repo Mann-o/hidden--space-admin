@@ -49,7 +49,7 @@ export default {
   },
 
   async asyncData ({ app: { $axios }, params }) {
-    const { data: space } = await $axios.get(`http://localhost:3333/api/v1/spaces/${params.slug}`)
+    const { data: space } = await $axios.get(`/api/v1/spaces/${params.slug}`)
     return { space }
   },
 

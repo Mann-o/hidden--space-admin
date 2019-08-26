@@ -54,7 +54,7 @@ export default {
   methods: {
     async loadMedia () {
       this.media = []
-      const { data: media } = await this.$axios.get('http://localhost:3333/api/v1/media')
+      const { data: media } = await this.$axios.get('/api/media')
       this.media = media
     },
     mediaStyle (url) {

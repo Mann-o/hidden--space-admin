@@ -47,10 +47,7 @@ export default {
         formData.append('files[]', file)
       })
       this.isUploading = true
-      const { data } = await this.$axios.post(
-        'http://localhost:3333/api/v1/media/upload',
-        formData
-      )
+      const { data } = await this.$axios.post('/api/media/upload', formData)
       if (data.status === 'success') {
         this.$bvToast.toast(
           `${this.files.length} file` +

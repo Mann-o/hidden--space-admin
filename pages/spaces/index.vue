@@ -79,14 +79,14 @@ export default {
   }),
 
   async asyncData ({ app: { $axios } }) {
-    const { data: spaces } = await $axios.get('http://localhost:3333/api/v1/spaces')
+    const { data: spaces } = await $axios.get('/api/spaces')
     return { spaces }
   },
 
   methods: {
     async getSpaces () {
       this.spaces = []
-      const { data: spaces } = await this.$axios.get('http://localhost:3333/api/v1/spaces')
+      const { data: spaces } = await this.$axios.get('/api/spaces')
       this.spaces = spaces
     },
     async deleteSpace (space) {

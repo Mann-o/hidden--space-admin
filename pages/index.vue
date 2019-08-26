@@ -34,7 +34,7 @@ export default {
   },
 
   async asyncData ({ app: { $axios } }) {
-    const { data: { spaceCount, therapistCount, postCount, userCount, mediaCount } } = await $axios.get('http://localhost:3333/api/v1/')
+    const { data: { spaceCount, therapistCount, postCount, userCount, mediaCount } } = await $axios.get('/api/')
     return {
       spaceCount,
       therapistCount,

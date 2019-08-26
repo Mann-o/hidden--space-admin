@@ -35,7 +35,7 @@ export default {
   }),
 
   async asyncData ({ app: { $axios } }) {
-    const { data: users } = await $axios.get('http://localhost:3333/api/v1/users')
+    const { data: users } = await $axios.get('/api/v1/users')
     return { users }
   },
 }

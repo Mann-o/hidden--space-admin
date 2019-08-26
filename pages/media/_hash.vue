@@ -29,9 +29,7 @@ export default {
   },
 
   async asyncData ({ app: { $axios }, params }) {
-    const { data: media } = await $axios.get(
-      `http://localhost:3333/api/v1/media/${params.hash}`
-    )
+    const { data: media } = await $axios.get(`/api/media/${params.hash}`)
     return { media }
   },
 }

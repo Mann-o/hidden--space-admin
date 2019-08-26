@@ -29,7 +29,7 @@ export default {
   }),
 
   async asyncData ({ app: { $axios } }) {
-    const { data: posts } = await $axios.get('http://localhost:3333/api/v1/posts')
+    const { data: posts } = await $axios.get('/api/posts')
     return { posts }
   },
 }
