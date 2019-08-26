@@ -87,7 +87,7 @@ export default {
   },
 
   async asyncData ({ app: { $axios }, params }) {
-    const { data: therapist } = await $axios.get(`/api/v1/therapists/${params.slug}`)
+    const { data: therapist } = await $axios.get(`/api/therapists/${params.slug}`)
     return { therapist }
   },
 

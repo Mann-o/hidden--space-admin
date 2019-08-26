@@ -120,14 +120,14 @@ export default {
   },
 
   async asyncData ({ app: { $axios } }) {
-    const { data: therapists } = await $axios.get('/api/v1/therapists')
+    const { data: therapists } = await $axios.get('/api/therapists')
     return { therapists }
   },
 
   methods: {
     async getTherapists () {
       this.therapists = []
-      const { data: therapists } = await this.$axios.get('/api/v1/therapists')
+      const { data: therapists } = await this.$axios.get('/api/therapists')
       this.therapists = therapists
     },
     async deleteTherapist (therapist) {
