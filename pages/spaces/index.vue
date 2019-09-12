@@ -17,13 +17,13 @@
         .text-center.text-info.my-2
           BSpinner.align-middle
           strong Loading...
-      template(slot="[slug]" slot-scope="row")
+      template(slot="cell(slug)" slot-scope="row")
         nuxt-link(:to="`/spaces/${row.item.slug}`") {{ row.item.slug }}
-      template(slot="[created]" slot-scope="row")
+      template(slot="cell(created)" slot-scope="row")
         span {{ row.item.created | dateFormat('dd/MM/yyyy - HH:mm') }}
-      template(slot="[lastUpdated]" slot-scope="row")
+      template(slot="cell(lastUpdated)" slot-scope="row")
         span {{ row.item.lastUpdated | dateFormat('dd/MM/yyyy - HH:mm') }}
-      template(slot="[actions]" slot-scope="row")
+      template(slot="cell(actions)" slot-scope="row")
         BButtonGroup
           BButton(size="sm" :to="`/spaces/${row.item.slug}`" variant="primary") View
           BButton(size="sm" @click="deleteSpace(row.item)" variant="danger") Delete

@@ -11,15 +11,15 @@
       striped
       hover
     )
-      template(slot="[slug]" slot-scope="row")
+      template(slot="cell(slug)" slot-scope="row")
         nuxt-link(:to="`/therapists/${row.item.slug}`") {{ row.item.slug }}
-      template(slot="[gender]" slot-scope="row")
+      template(slot="cell(gender)" slot-scope="row")
         span {{ row.item.gender.charAt(0).toUpperCase() + row.item.gender.slice(1) }}
-      template(slot="[created]" slot-scope="row")
+      template(slot="cell(created)" slot-scope="row")
         span {{ row.item.created | dateFormat('dd/MM/yyyy - HH:mm') }}
-      template(slot="[lastUpdated]" slot-scope="row")
+      template(slot="cell(lastUpdated)" slot-scope="row")
         span {{ row.item.lastUpdated | dateFormat('dd/MM/yyyy - HH:mm') }}
-      template(slot="[actions]" slot-scope="row")
+      template(slot="cell(actions)" slot-scope="row")
         BButtonGroup
           BButton(size="sm" :to="`/therapists/${row.item.slug}`" variant="primary") View
           BButton(size="sm" @click="deleteTherapist(row.item)" variant="danger") Delete

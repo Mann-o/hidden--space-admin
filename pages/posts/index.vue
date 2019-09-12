@@ -10,7 +10,7 @@
       striped
       hover
     )
-      template(slot="[actions]" slot-scope="row")
+      template(slot="cell(actions)" slot-scope="row")
         BButton(size="sm" :to="`/posts/${row.item.slug}`") View
 </template>
 

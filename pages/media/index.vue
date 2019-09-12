@@ -15,10 +15,10 @@
       striped
       hover
     )
-      template(slot="[preview]" slot-scope="row")
+      template(slot="cell(preview)" slot-scope="row")
         BLink(:to="`/media/${row.item.hash}`")
           BImgLazy(:src="row.item.url" width="50" :alt="row.item.altText" thumbnail)
-      template(slot="[actions]" slot-scope="row")
+      template(slot="cell(actions)" slot-scope="row")
         BButton(size="sm" :to="`/media/${row.item.hash}`") View
 </template>
 
