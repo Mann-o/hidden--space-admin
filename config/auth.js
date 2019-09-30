@@ -6,17 +6,16 @@ export default {
   },
 
   token: {
-    prefix: '_hiddenspace_token.',
+    prefix: 'token.',
   },
 
   localStorage: false,
 
-  cookies: {
+  cookie: {
     name: '_hiddenspace_auth.',
     prefix: '_hiddenspace_auth.',
     options: {
-      path: '/',
-      secure: process.env.NODE_ENV === 'production',
+      secure: (process.env.NODE_ENV === 'production'),
     },
   },
 
