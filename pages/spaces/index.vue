@@ -24,9 +24,9 @@
       template(slot="cell(lastUpdated)" slot-scope="row")
         span {{ row.item.lastUpdated | dateFormat('dd/MM/yyyy - HH:mm') }}
       template(slot="cell(actions)" slot-scope="row")
-        BButtonGroup
-          BButton(size="sm" :to="`/spaces/${row.item.slug}`" variant="primary") View
-          BButton(size="sm" @click="deleteSpace(row.item)" variant="danger") Delete
+        //- BButtonGroup
+        BButton(size="sm" :to="`/spaces/${row.item.slug}`" variant="primary") View
+        BButton(size="sm" @click="deleteSpace(row.item)" variant="danger" style="margin-left:8px") Delete
 
     BModal(id="new-space-modal" title="New Space" size="lg")
       BForm

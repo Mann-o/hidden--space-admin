@@ -5,7 +5,7 @@ require('dotenv').config()
 export default {
   '/api': {
     pathRewrite: {
-      '^/api': '/api/v1',
+      '^/api': '/api/v1/admin',
     },
 
     target:

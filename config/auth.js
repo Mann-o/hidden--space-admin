@@ -28,7 +28,7 @@ export default {
           propertyName: 'payload.token',
         },
         user: {
-          url: '/api/auth/user',
+          url: '/api/auth/me',
           method: 'get',
           propertyName: 'user',
         },

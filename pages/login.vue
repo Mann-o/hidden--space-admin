@@ -14,6 +14,7 @@
             :value="credentials.loginId"
             @input="updateLoginId"
             placeholder="Enter Login ID"
+            :disabled="isLoggingIn"
           )
         BFormGroup(label="Password" label-for="password")
           BFormInput(
@@ -22,10 +23,11 @@
             :value="credentials.password"
             @input="updatePassword"
             placeholder="Enter Password"
+            :disabled="isLoggingIn"
           )
         BButton(type="submit" variant="primary" :disabled="isLoggingIn")
           span Login
-          BSpinner(v-if="isLoggingIn" small)
+          BSpinner(v-if="isLoggingIn" small style="margin-left:8px")
 </template>
 
 <script>

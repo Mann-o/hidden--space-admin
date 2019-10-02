@@ -20,6 +20,7 @@
           BImgLazy(:src="row.item.url" width="50" :alt="row.item.altText" thumbnail)
       template(slot="cell(actions)" slot-scope="row")
         BButton(size="sm" :to="`/media/${row.item.hash}`") View
+        BButton(size="sm" @click="deleteMedia(row.item)" variant="danger") Delete
 </template>
 
 <script>
@@ -47,6 +48,41 @@ export default {
   async asyncData ({ app: { $axios } }) {
     const { data: media } = await $axios.get('/api/media')
     return { media }
+  },
+
+  methods: {
+    async getMedia () {
+      this.media = []
+      const { data: media } = await this.$axios.get('/api/media')
+      this.media = media
+    },
+    async deleteMedia (media) {
+      const doDelete = await this.$bvModal.msgBoxConfirm(
+        `Are you sure you wish to delete this media? This operation is irreversible!`,
+        {
+          title: 'Delete Media?',
+          size: 'md',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          okTitle: 'Delete',
+          hideHeaderClose: true,
+          centered: true,
+        }
+      )
+      if (doDelete) {
+        const {
+          data: { status },
+        } = await this.$axios.delete(`/api/media/${media.hash}`)
+        if (status === 'success') {
+          this.getMedia()
+          this.$bvToast.toast('Media deleted successfully!', {
+            title: 'Success',
+            autoHideDelay: 5000,
+            variant: 'success',
+          })
+        }
+      }
+    },
   },
 }
 </script>
