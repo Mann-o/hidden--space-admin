@@ -10,6 +10,10 @@
       striped
       hover
     )
+      template(slot="cell(created)" slot-scope="row")
+        span {{ row.item.created | dateFormat('dd/MM/yyyy - HH:mm') }}
+      template(slot="cell(lastUpdated)" slot-scope="row")
+        span {{ row.item.lastUpdated | dateFormat('dd/MM/yyyy - HH:mm') }}
       template(slot="cell(actions)" slot-scope="row")
         BButton(size="sm" :to="`/users/${row.item.username}`") View
 </template>
