@@ -22,12 +22,20 @@
 </template>
 
 <script>
+import handleError from '@/mixins/handle-error'
+import handleSuccess from '@/mixins/handle-success'
+
 export default {
   name: 'PageUsersUsername',
 
   components: {
     Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
   },
+
+  mixins: [
+    handleError,
+    handleSuccess,
+  ],
 
   data: () => ({
     isSaving: false,
@@ -60,24 +68,13 @@ export default {
     async saveUser () {
       this.isSaving = true
       try {
-        const {
-          data: { status },
-        } = await this.$axios.patch(`/api/users/${this.user.id}`, this.user)
-        if (status === 'success') {
-          this.$bvToast.toast('User updated successfully!', {
-            title: 'Success',
-            autoHideDelay: 5000,
-            variant: 'success',
-          })
-        } else {
+        const { data: { status } } = await this.$axios.patch(`/api/users/${this.user.id}`, this.user)
+        if (status !== 'success') {
           throw new Error('error')
         }
+        handleSuccess('User updated successfully!')
       } catch (error) {
-        this.$bvToast.toast('Unable to update User - please try again.', {
-          title: 'Error',
-          autoHideDelay: 5000,
-          variant: 'danger',
-        })
+        handleError(error, 'Unable to update User - please try again.')
       } finally {
         this.isSaving = false
       }

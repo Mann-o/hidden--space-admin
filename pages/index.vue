@@ -8,6 +8,8 @@
 export default {
   name: 'PageIndex',
 
+  transition: 'fade',
+
   components: {
     Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
     ModelCounters: () => import('@/components/page/index/ModelCounters'),

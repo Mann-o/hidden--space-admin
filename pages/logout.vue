@@ -7,6 +7,8 @@
 export default {
   name: 'PageLogout',
 
+  transition: 'fade',
+
   mounted () {
     this.$auth.logout()
   },

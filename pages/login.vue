@@ -38,6 +38,8 @@ export default {
 
   layout: 'auth',
 
+  transition: 'fade',
+
   computed: {
     ...mapState('login', ['credentials', 'isLoggingIn']),
   },

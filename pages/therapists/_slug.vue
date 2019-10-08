@@ -45,6 +45,8 @@
 export default {
   name: 'PageTherapistsSlug',
 
+  transition: 'fade',
+
   components: {
     Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
     ModalGallery: () => import('@/components/ModalGallery'),

@@ -8,6 +8,8 @@
 export default {
   name: 'PagePostsSlug',
 
+  transition: 'fade',
+
   components: {
     Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
   },

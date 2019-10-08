@@ -8,6 +8,8 @@
 export default {
   name: 'PageMediaHash',
 
+  transition: 'fade',
+
   components: {
     Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
   },

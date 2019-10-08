@@ -27,6 +27,8 @@
 export default {
   name: 'PageSpacesSlug',
 
+  transition: 'fade',
+
   components: {
     Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
   },

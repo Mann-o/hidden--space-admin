@@ -50,6 +50,8 @@
 export default {
   name: 'PageSpacesIndex',
 
+  transition: 'fade',
+
   components: {
     Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
   },
@@ -134,7 +136,11 @@ export default {
           throw new Error('error')
         }
       } catch (error) {
-        this.$bvToast.toast('An error occured whilst trying to save this Space.', {
+        this.$bvToast.toast((
+          (error.response && error.response.status === 422)
+            ? error.response.data.errors[0].message
+            : 'An error occured whilst trying to save this Space.'
+        ), {
           title: 'Error',
           autoHideDelay: 5000,
           variant: 'danger',

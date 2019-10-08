@@ -62,6 +62,8 @@
 export default {
   name: 'PageTherapistsIndex',
 
+  transition: 'fade',
+
   components: {
     Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
     ModalGallery: () => import('@/components/ModalGallery'),

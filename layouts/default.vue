@@ -19,5 +19,6 @@ export default {
 </script>
 
 <style lang="stylus">
+@import '~assets/styles/core/animation/fade'
 @import '~assets/styles/vendor/quill'
 </style>

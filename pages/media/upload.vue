@@ -24,6 +24,8 @@
 export default {
   name: 'PageMediaUpload',
 
+  transition: 'fade',
+
   components: {
     Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
   },

@@ -22,6 +22,8 @@
 export default {
   name: 'PageUsersIndex',
 
+  transition: 'fade',
+
   components: {
     Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
   },

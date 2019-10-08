@@ -18,6 +18,8 @@
 export default {
   name: 'PagePostsIndex',
 
+  transition: 'fade',
+
   components: {
     Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
   },
