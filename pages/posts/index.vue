@@ -23,8 +23,17 @@
         .text-center.text-info.my-2
           BSpinner.align-middle
           strong.ml-2 Fetching posts...
+      template(slot="cell(slug)" slot-scope="row")
+        nuxt-link(:to="`/posts/${row.item.slug}`") {{ row.item.slug }}
+      template(slot="cell(author)" slot-scope="row")
+        span {{ row.item.author.username }}
+      template(slot="cell(created)" slot-scope="row")
+        span {{ row.item.created | dateFormat('dd/MM/yyyy - HH:mm') }}
+      template(slot="cell(lastUpdated)" slot-scope="row")
+        span {{ row.item.lastUpdated | dateFormat('dd/MM/yyyy - HH:mm') }}
       template(slot="cell(actions)" slot-scope="row")
-        BButton(size="sm" :to="`/posts/${row.item.slug}`" variant="primary") View
+        BButton.mr-2(size="sm" :to="`/posts/${row.item.slug}`" variant="primary") View
+        BButton(size="sm" variant="danger" @click="deletePost(row.item)") Delete
     BPagination(
       v-if="posts.length > 10"
       v-model="currentPage"
@@ -46,7 +55,14 @@ export default {
 
   data: () => ({
     crumbs: [{ text: 'Posts', active: true }],
-    fields: [{ key: 'slug', sortable: true }, { key: 'actions', label: 'Actions' }],
+    fields: [
+      { key: 'slug', sortable: true },
+      { key: 'title', sortable: true },
+      { key: 'author', sortable: true },
+      { key: 'created', sortable: true },
+      { key: 'lastUpdated', sortable: true },
+      { key: 'actions', label: 'Actions' },
+    ],
     posts: [],
     currentPage: 1,
   }),
