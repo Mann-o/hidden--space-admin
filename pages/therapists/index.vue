@@ -1,16 +1,25 @@
 <template lang="pug">
   .page-therapists-index
     Breadcrumbs(:crumbs="crumbs")
-    BButton(v-b-modal.new-therapist-modal variant="primary") New Therapist
+    .page-therapists-index__buttons
+      BButton.mr-2(v-b-modal.new-therapist-modal variant="primary") Create New Therapist
+      BButton(@click="getTherapists()" variant="primary") Refresh
+
     BTable(
-      v-if="therapists.length"
+      :busy.sync="!therapists.length"
       :fields="fields"
       :items="therapists"
       primary-key="slug"
       responsive="sm"
       striped
+      small
       hover
+      bordered
     )
+      template(slot="table-busy")
+        .text-center.text-info.my-2
+          BSpinner.align-middle
+          strong.ml-2 Fetching therapists...
       template(slot="cell(slug)" slot-scope="row")
         nuxt-link(:to="`/therapists/${row.item.slug}`") {{ row.item.slug }}
       template(slot="cell(gender)" slot-scope="row")
@@ -20,11 +29,10 @@
       template(slot="cell(lastUpdated)" slot-scope="row")
         span {{ row.item.lastUpdated | dateFormat('dd/MM/yyyy - HH:mm') }}
       template(slot="cell(actions)" slot-scope="row")
-        BButtonGroup
-          BButton(size="sm" :to="`/therapists/${row.item.slug}`" variant="primary") View
+          BButton.mr-2(size="sm" :to="`/therapists/${row.item.slug}`" variant="primary") View
           BButton(size="sm" @click="deleteTherapist(row.item)" variant="danger") Delete
 
-    BModal(id="new-therapist-modal" title="New Therapist" size="lg" scrollable)
+    BModal(id="new-therapist-modal" title="Create New Therapist" size="lg" @hidden="resetNewTherapist" scrollable)
       BForm
         BFormGroup(label="Slug" label-for="slug" label-cols="3")
           BFormInput(id="slug" v-model="newTherapist.slug" required)
@@ -52,7 +60,7 @@
         BButton.float-right(@click="saveNewTherapist" variant="primary" :disabled="newTherapistSaving")
           span {{ newTherapistSaving ? 'Saving' : 'Save' }}
           BSpinner(v-if="newTherapistSaving" small)
-        BButton.float-right.mr-2(@click="cancelNewTherapist" :disabled="newTherapistSaving")
+        BButton.float-right.mr-2(@click="$bvModal.hide('new-therapist-modal')" :disabled="newTherapistSaving")
           span Cancel
 
     ModalGallery(title="Select Therapist Profile Image" :selected="selectedImageId" @select="selectImage")
@@ -186,7 +194,7 @@ export default {
       this.selectedImage = image
       this.newTherapist.image_id = image.id
     },
-    cancelNewTherapist () {
+    resetNewTherapist () {
       this.newTherapist = {
         slug: null,
         gender: 'male',
@@ -198,9 +206,17 @@ export default {
         biography: null,
         imageId: null,
       }
-      this.$bvModal.hide('new-therapist-modal')
       this.selectedImage = null
     },
   },
 }
 </script>
+
+<style lang="stylus">
+@import '~assets/styles/core/mixins/bem'
+
+.page-therapists-index
+
+  +has(buttons)
+    padding-bottom: 1rem
+</style>

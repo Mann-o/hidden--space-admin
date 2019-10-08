@@ -1,9 +1,13 @@
 <template lang="pug">
   .page-spaces-index
     Breadcrumbs(:crumbs="crumbs")
-    BButton(v-b-modal.new-space-modal variant="primary") New Space
+
+    .page-spaces-index__buttons
+      BButton.mr-2(v-b-modal.new-space-modal variant="primary") Create New Space
+      BButton(@click="getSpaces()" variant="primary") Refresh
+
     BTable(
-      v-if="spaces.length"
+      :busy.sync="!spaces.length"
       :fields="fields"
       :items="spaces"
       primary-key="slug"
@@ -16,7 +20,7 @@
       template(slot="table-busy")
         .text-center.text-info.my-2
           BSpinner.align-middle
-          strong Loading...
+          strong.ml-2 Fetching spaces...
       template(slot="cell(slug)" slot-scope="row")
         nuxt-link(:to="`/spaces/${row.item.slug}`") {{ row.item.slug }}
       template(slot="cell(created)" slot-scope="row")
@@ -24,26 +28,25 @@
       template(slot="cell(lastUpdated)" slot-scope="row")
         span {{ row.item.lastUpdated | dateFormat('dd/MM/yyyy - HH:mm') }}
       template(slot="cell(actions)" slot-scope="row")
-        //- BButtonGroup
-        BButton(size="sm" :to="`/spaces/${row.item.slug}`" variant="primary") View
-        BButton(size="sm" @click="deleteSpace(row.item)" variant="danger" style="margin-left:8px") Delete
+        BButton.mr-2(size="sm" :to="`/spaces/${row.item.slug}`" variant="primary") View
+        BButton(size="sm" @click="deleteSpace(row.item)" variant="danger") Delete
 
-    BModal(id="new-space-modal" title="New Space" size="lg")
+    BModal(id="new-space-modal" title="Create New Space" size="lg" @hidden="resetNewSpace")
       BForm
         BFormGroup(label="Slug" label-for="slug" label-cols="3")
-          BFormInput(id="slug" v-model="newSpace.slug")
+          BFormInput(id="slug" v-model="newSpace.slug" :disabled="newSpaceSaving")
         BFormGroup(label="Property Number" label-for="propertyNumber" label-cols="3")
-          BFormInput(id="propertyNumber" v-model="newSpace.propertyNumber")
+          BFormInput(id="propertyNumber" v-model="newSpace.propertyNumber" :disabled="newSpaceSaving")
         BFormGroup(label="Building Name" label-for="buildingName" label-cols="3")
-          BFormInput(id="buildingName" v-model="newSpace.buildingName")
+          BFormInput(id="buildingName" v-model="newSpace.buildingName" :disabled="newSpaceSaving")
         BFormGroup(label="Street Address" label-for="streetAddress" label-cols="3")
-          BFormInput(id="streetAddress" v-model="newSpace.streetAddress")
+          BFormInput(id="streetAddress" v-model="newSpace.streetAddress" :disabled="newSpaceSaving")
         BFormGroup(label="City" label-for="city" label-cols="3")
-          BFormInput(id="city" v-model="newSpace.city")
+          BFormInput(id="city" v-model="newSpace.city" :disabled="newSpaceSaving")
       .w-100(slot="modal-footer")
-        BButton.float-right(@click="saveNewSpace" variant="primary" :disabled="newSpaceSaving")
-          span {{ newSpaceSaving ? 'Saving' : 'Save' }}
-          BSpinner(v-if="newSpaceSaving" small)
+        SpinnerButton.float-right(@click="saveNewSpace" :disabled="newSpaceSaving" :loading="newSpaceSaving")
+        BButton.float-right.mr-2(@click="$bvModal.hide('new-space-modal')" :disabled="newSpaceSaving")
+          span Cancel
 </template>
 
 <script>
@@ -54,6 +57,7 @@ export default {
 
   components: {
     Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
+    SpinnerButton: () => import('@/components/elements/SpinnerButton'),
   },
 
   data: () => ({
@@ -118,6 +122,15 @@ export default {
         }
       }
     },
+    resetNewSpace () {
+      this.newSpace = {
+        slug: null,
+        propertyNumber: null,
+        buildingName: null,
+        streetAddress: null,
+        city: null,
+      }
+    },
     async saveNewSpace () {
       this.newSpaceSaving = true
       try {
@@ -152,3 +165,12 @@ export default {
   },
 }
 </script>
+
+<style lang="stylus">
+@import '~assets/styles/core/mixins/bem'
+
+.page-spaces-index
+
+  +has(buttons)
+    padding-bottom: 1rem
+</style>
