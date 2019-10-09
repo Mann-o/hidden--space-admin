@@ -6,11 +6,13 @@
       BButton(@click="getUsers()" variant="primary") Refresh
 
     BTable(
-      :busy.sync="!users.length"
+      :busy.sync="loadingUsers"
       :fields="fields"
       :items="users"
       primary-key="username"
       responsive="sm"
+      empty-text="No users found!"
+      show-empty
       striped
       hover
       small
@@ -25,7 +27,8 @@
       template(slot="cell(lastUpdated)" slot-scope="row")
         span {{ row.item.lastUpdated | dateFormat('dd/MM/yyyy - HH:mm') }}
       template(slot="cell(actions)" slot-scope="row")
-        BButton(size="sm" :to="`/users/${row.item.username}`" variant="primary") View
+        BButton.mr-2(size="sm" :to="`/users/${row.item.username}`" variant="primary") View
+        BButton(@click="deleteUser(row.item)" size="sm" variant="danger") Delete
 </template>
 
 <script>
@@ -48,6 +51,7 @@ export default {
       { key: 'actions', label: 'Actions' },
     ],
     users: [],
+    loadingUsers: false,
   }),
 
   async asyncData ({ app: { $axios } }) {
@@ -57,9 +61,36 @@ export default {
 
   methods: {
     async getUsers () {
+      this.loadingUsers = true
       this.users = []
       const { data: users } = await this.$axios.get('/api/users')
       this.users = users
+      this.loadingUsers = false
+    },
+    async deleteUser (user) {
+      const doDelete = await this.$bvModal.msgBoxConfirm(
+        `Are you sure you wish to delete this User? This operation is irreversible!`,
+        {
+          title: 'Delete User?',
+          size: 'md',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          okTitle: 'Delete',
+          hideHeaderClose: true,
+          centered: true,
+        }
+      )
+      if (doDelete) {
+        const { data: { status } } = await this.$axios.delete(`/api/users/${user.id}`)
+        if (status === 'success') {
+          this.getUsers()
+          this.$bvToast.toast('Therapist deleted successfully!', {
+            title: 'Success',
+            autoHideDelay: 5000,
+            variant: 'success',
+          })
+        }
+      }
     },
   },
 }

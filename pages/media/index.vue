@@ -1,25 +1,35 @@
 <template lang="pug">
-  .page-users-index
+  .page-media-index
     Breadcrumbs(:crumbs="crumbs")
 
-    BRow
-      BCol
-        BButton(variant="primary" to="/media/upload") Upload Media
+    .page-media-index__buttons
+      BButton.mr-2(variant="primary" to="/media/upload") Upload Media
+      BButton(@click="getMedia()" variant="primary") Refresh
 
     BTable(
-      v-if="media.length"
+      :busy.sync="loadingMedia"
       :fields="fields"
       :items="media"
       primary-key="hash"
       responsive="sm"
       striped
       hover
+      empty-text="No media found!"
+      show-empty
     )
+      template(slot="table-busy")
+        .text-center.text-info.my-2
+          BSpinner.align-middle
+          strong.ml-2 Fetching media...
       template(slot="cell(preview)" slot-scope="row")
         BLink(:to="`/media/${row.item.hash}`")
           BImgLazy(:src="row.item.url" width="50" :alt="row.item.altText" thumbnail)
+      template(slot="cell(created)" slot-scope="row")
+        span {{ row.item.created | dateFormat('dd/MM/yyyy - HH:mm') }}
+      template(slot="cell(lastUpdated)" slot-scope="row")
+        span {{ row.item.lastUpdated | dateFormat('dd/MM/yyyy - HH:mm') }}
       template(slot="cell(actions)" slot-scope="row")
-        BButton(size="sm" :to="`/media/${row.item.hash}`") View
+        BButton.mr-2(size="sm" :to="`/media/${row.item.hash}`" variant="primary") View
         BButton(size="sm" @click="deleteMedia(row.item)" variant="danger") Delete
 </template>
 
@@ -45,6 +55,7 @@ export default {
       { key: 'actions', label: 'Actions' },
     ],
     media: [],
+    loadingMedia: false,
   }),
 
   async asyncData ({ app: { $axios } }) {
@@ -54,9 +65,11 @@ export default {
 
   methods: {
     async getMedia () {
+      this.loadingMedia = true
       this.media = []
       const { data: media } = await this.$axios.get('/api/media')
       this.media = media
+      this.loadingMedia = false
     },
     async deleteMedia (media) {
       const doDelete = await this.$bvModal.msgBoxConfirm(
@@ -88,3 +101,12 @@ export default {
   },
 }
 </script>
+
+<style lang="stylus" scoped>
+@import '~assets/styles/core/mixins/bem'
+
+.page-media-index
+
+  +has(buttons)
+    padding-bottom: 1rem
+</style>

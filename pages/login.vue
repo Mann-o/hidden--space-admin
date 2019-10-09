@@ -52,7 +52,6 @@ export default {
       'stopLoading',
     ]),
     async doLogin () {
-      this.$nuxt.$loading.start()
       this.startLoading()
       try {
         await this.$auth.loginWith('local', { data: this.credentials })
@@ -67,7 +66,6 @@ export default {
         )
       }
       this.stopLoading()
-      this.$nuxt.$loading.finish()
     },
     onReset () {
       alert('reset')

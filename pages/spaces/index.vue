@@ -7,11 +7,13 @@
       BButton(@click="getSpaces()" variant="primary") Refresh
 
     BTable(
-      :busy.sync="!spaces.length"
+      :busy.sync="loadingSpaces"
       :fields="fields"
       :items="spaces"
       primary-key="slug"
       responsive="sm"
+      empty-text="No spaces found!"
+      show-empty
       striped
       hover
       small
@@ -82,6 +84,7 @@ export default {
       city: null,
     },
     newSpaceSaving: false,
+    loadingSpaces: false,
   }),
 
   async asyncData ({ app: { $axios } }) {
@@ -91,9 +94,11 @@ export default {
 
   methods: {
     async getSpaces () {
+      this.loadingSpaces = true
       this.spaces = []
       const { data: spaces } = await this.$axios.get('/api/spaces')
       this.spaces = spaces
+      this.loadingSpaces = false
     },
     async deleteSpace (space) {
       const doDelete = await this.$bvModal.msgBoxConfirm(

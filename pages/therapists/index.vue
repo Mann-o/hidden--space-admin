@@ -6,11 +6,13 @@
       BButton(@click="getTherapists()" variant="primary") Refresh
 
     BTable(
-      :busy.sync="!therapists.length"
+      :busy.sync="loadingTherapists"
       :fields="fields"
       :items="therapists"
       primary-key="slug"
       responsive="sm"
+      empty-text="No therapists found!"
+      show-empty
       striped
       small
       hover
@@ -121,6 +123,7 @@ export default {
       theme: 'bubble',
     },
     selectedImage: null,
+    loadingTherapists: false,
   }),
 
   computed: {
@@ -136,9 +139,11 @@ export default {
 
   methods: {
     async getTherapists () {
+      this.loadingTherapists = true
       this.therapists = []
       const { data: therapists } = await this.$axios.get('/api/therapists')
       this.therapists = therapists
+      this.loadingTherapists = false
     },
     async deleteTherapist (therapist) {
       const doDelete = await this.$bvModal.msgBoxConfirm(

@@ -7,13 +7,15 @@
 
     BTable(
       id="posts-table"
-      :busy.sync="!posts.length"
+      :busy.sync="loadingPosts"
       :fields="fields"
       :items="posts"
       primary-key="slug"
       responsive="sm"
       :per-page="10"
       :current-page="currentPage"
+      empty-text="No posts found!"
+      show-empty
       striped
       hover
       small
@@ -65,6 +67,7 @@ export default {
     ],
     posts: [],
     currentPage: 1,
+    loadingPosts: false,
   }),
 
   async asyncData ({ app: { $axios } }) {
@@ -74,9 +77,11 @@ export default {
 
   methods: {
     async getPosts () {
+      this.loadingPosts = true
       this.posts = []
       const { data: posts } = await this.$axios.get('/api/posts')
       this.posts = posts
+      this.loadingPosts = false
     },
   },
 }
