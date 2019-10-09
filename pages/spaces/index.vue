@@ -69,12 +69,12 @@
 </template>
 
 <script>
-import BaseCrud from '@/mixins/crud/index'
+import index from '@/mixins/crud/index'
 
 export default {
   name: 'PageSpacesIndex',
 
-  mixins: [BaseCrud('spaces')],
+  mixins: [index('spaces')],
 
   data: () => ({
     fields: [

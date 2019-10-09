@@ -53,12 +53,12 @@
 </template>
 
 <script>
-import BaseCrud from '@/mixins/crud/index'
+import index from '@/mixins/crud/index'
 
 export default {
   name: 'PagePostsIndex',
 
-  mixins: [BaseCrud('posts')],
+  mixins: [index('posts')],
 
   data: () => ({
     fields: [

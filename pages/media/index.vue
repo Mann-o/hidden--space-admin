@@ -6,16 +6,16 @@
     .page-media-index__buttons
       BButton.mr-2(to="/media/upload" variant="success") Upload Media
       SpinnerButton(
-        @click="getMedia()"
-        :disabled="loadingMedia"
-        :loading="loadingMedia"
+        @click="index()"
+        :disabled="indexing"
+        :loading="indexing"
         label="Refresh"
         label-when-loading="Refreshing"
       )
 
     BTable(
       id="posts-table"
-      :busy.sync="loadingMedia"
+      :busy.sync="indexing"
       :fields="fields"
       :items="media"
       primary-key="hash"
@@ -40,7 +40,7 @@
         span {{ row.item.lastUpdated | dateFormat('dd/MM/yyyy - HH:mm') }}
       template(slot="cell(actions)" slot-scope="row")
         BButton.mr-2(size="sm" :to="`/media/${row.item.hash}`" variant="primary") View
-        BButton(size="sm" @click="deleteMedia(row.item)" variant="danger") Delete
+        BButton(size="sm" @click="destroy(row.item)" variant="danger") Delete
 
     BPagination(
       v-if="media.length > 10"
@@ -52,18 +52,14 @@
 </template>
 
 <script>
+import index from '@/mixins/crud/index'
+
 export default {
-  name: 'PageUsersIndex',
+  name: 'PageMediaIndex',
 
-  transition: 'fade',
-
-  components: {
-    Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
-    SpinnerButton: () => import('@/components/elements/SpinnerButton'),
-  },
+  mixins: [index('media')],
 
   data: () => ({
-    crumbs: [{ text: 'Media', active: true }],
     fields: [
       { key: 'preview', sortable: true },
       { key: 'filename', sortable: true },
@@ -73,64 +69,7 @@ export default {
       { key: 'lastUpdated', sortable: true },
       { key: 'actions', label: 'Actions' },
     ],
-    media: [],
-    loadingMedia: false,
-    currentPage: 1,
   }),
-
-  computed: {
-    shouldChangePage () {
-      return (
-        (this.media.length % 10 === 0) &&
-        (this.currentPage > Math.ceil(this.media.length / 10))
-      )
-    },
-  },
-
-  async asyncData ({ app: { $axios } }) {
-    const { data: media } = await $axios.get('/api/media')
-    return { media }
-  },
-
-  methods: {
-    async getMedia () {
-      this.loadingMedia = true
-      this.media = []
-      const { data: media } = await this.$axios.get('/api/media')
-      this.media = media
-      if (this.shouldChangePage) {
-        this.currentPage = this.currentPage - 1
-      }
-      this.loadingMedia = false
-    },
-    async deleteMedia (media) {
-      const doDelete = await this.$bvModal.msgBoxConfirm(
-        `Are you sure you wish to delete this media? This operation is irreversible!`,
-        {
-          title: 'Delete Media?',
-          size: 'md',
-          buttonSize: 'sm',
-          okVariant: 'danger',
-          okTitle: 'Delete',
-          hideHeaderClose: true,
-          centered: true,
-        }
-      )
-      if (doDelete) {
-        const {
-          data: { status },
-        } = await this.$axios.delete(`/api/media/${media.hash}`)
-        if (status === 'success') {
-          this.getMedia()
-          this.$bvToast.toast('Media deleted successfully!', {
-            title: 'Success',
-            autoHideDelay: 5000,
-            variant: 'success',
-          })
-        }
-      }
-    },
-  },
 }
 </script>
 

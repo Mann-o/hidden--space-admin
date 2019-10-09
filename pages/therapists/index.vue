@@ -84,16 +84,16 @@
 </template>
 
 <script>
-import BaseCrud from '@/mixins/crud/index'
+import index from '@/mixins/crud/index'
 
 export default {
   name: 'PageTherapistsIndex',
 
-  mixins: [BaseCrud('therapists')],
-
   components: {
     ModalGallery: () => import('@/components/ModalGallery'),
   },
+
+  mixins: [index('therapists')],
 
   data: () => ({
     fields: [
