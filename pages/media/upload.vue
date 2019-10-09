@@ -1,23 +1,32 @@
 <template lang="pug">
   .page-media-upload
-    Breadcrumbs(:crumbs="crumbs")
 
-    BForm(@submit.prevent="onSubmit" @reset="onReset")
-      BFormGroup(label="File(s)" label-for="files")
-        BFormFile(
-          ref="file-upload"
-          v-model="files"
-          placeholder="Select file(s) or drag and drop here..."
-          drop-placeholder="Drop file(s) here!"
-          accept=".jpg, .jpeg, .png"
-          multiple
-        )
-      BButton(type="submit" variant="primary" :disabled="!hasFiles || isUploading")
-        span Upload
-        BSpinner(v-if="isUploading" small)
-      BButton(type="reset" variant="danger" :disabled="!hasFiles || isUploading")
-        span Reset
-
+    BContainer
+      BRow
+        Breadcrumbs(:crumbs="crumbs")
+      BRow(fluid)
+        BCol
+          BForm
+            BFormGroup(label="File(s)" label-for="files")
+              BFormFile(
+                ref="file-upload"
+                v-model="files"
+                placeholder="Select file(s), or drag and drop here..."
+                drop-placeholder="Drop file(s) here!"
+                accept=".jpg, .jpeg, .png"
+                multiple
+              )
+            BFormGroup(v-if="hasFiles")
+              span {{ files.length }} file{{ (files.length) > 1 ? 's' : '' }} selected
+            SpinnerButton.mr-2(
+              @click="onSubmit()"
+              :disabled="!hasFiles || isUploading"
+              :loading="isUploading"
+              label="Upload"
+              label-when-loading="Uploading"
+            )
+            BButton(@click="onReset()" variant="danger" :disabled="!hasFiles || isUploading")
+              span Reset
 </template>
 
 <script>
@@ -28,6 +37,7 @@ export default {
 
   components: {
     Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
+    SpinnerButton: () => import('@/components/elements/SpinnerButton'),
   },
 
   data: () => ({

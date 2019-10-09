@@ -1,21 +1,31 @@
 <template lang="pug">
   .page-media-index
+
     Breadcrumbs(:crumbs="crumbs")
 
     .page-media-index__buttons
-      BButton.mr-2(variant="primary" to="/media/upload") Upload Media
-      BButton(@click="getMedia()" variant="primary") Refresh
+      BButton.mr-2(to="/media/upload" variant="success") Upload Media
+      SpinnerButton(
+        @click="getMedia()"
+        :disabled="loadingMedia"
+        :loading="loadingMedia"
+        label="Refresh"
+        label-when-loading="Refreshing"
+      )
 
     BTable(
+      id="posts-table"
       :busy.sync="loadingMedia"
       :fields="fields"
       :items="media"
       primary-key="hash"
       responsive="sm"
-      striped
-      hover
+      :per-page="10"
+      :current-page="currentPage"
       empty-text="No media found!"
       show-empty
+      striped
+      hover
     )
       template(slot="table-busy")
         .text-center.text-info.my-2
@@ -31,6 +41,14 @@
       template(slot="cell(actions)" slot-scope="row")
         BButton.mr-2(size="sm" :to="`/media/${row.item.hash}`" variant="primary") View
         BButton(size="sm" @click="deleteMedia(row.item)" variant="danger") Delete
+
+    BPagination(
+      v-if="media.length > 10"
+      v-model="currentPage"
+      :total-rows="media.length"
+      :per-page="10"
+      aria-controls="media-table"
+    )
 </template>
 
 <script>
@@ -41,6 +59,7 @@ export default {
 
   components: {
     Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
+    SpinnerButton: () => import('@/components/elements/SpinnerButton'),
   },
 
   data: () => ({
@@ -56,7 +75,17 @@ export default {
     ],
     media: [],
     loadingMedia: false,
+    currentPage: 1,
   }),
+
+  computed: {
+    shouldChangePage () {
+      return (
+        (this.media.length % 10 === 0) &&
+        (this.currentPage > Math.ceil(this.media.length / 10))
+      )
+    },
+  },
 
   async asyncData ({ app: { $axios } }) {
     const { data: media } = await $axios.get('/api/media')
@@ -69,6 +98,9 @@ export default {
       this.media = []
       const { data: media } = await this.$axios.get('/api/media')
       this.media = media
+      if (this.shouldChangePage) {
+        this.currentPage = this.currentPage - 1
+      }
       this.loadingMedia = false
     },
     async deleteMedia (media) {

@@ -3,15 +3,24 @@
     Breadcrumbs(:crumbs="crumbs")
 
     .page-spaces-index__buttons
-      BButton.mr-2(v-b-modal.new-space-modal variant="primary") Create New Space
-      BButton(@click="getSpaces()" variant="primary") Refresh
+      BButton.mr-2(v-b-modal.new-space-modal variant="success") Create New Space
+      SpinnerButton(
+        @click="index()"
+        :disabled="indexing"
+        :loading="indexing"
+        label="Refresh"
+        label-when-loading="Refreshing"
+      )
 
     BTable(
-      :busy.sync="loadingSpaces"
+      id="spaces-table"
+      :busy.sync="indexing"
       :fields="fields"
       :items="spaces"
       primary-key="slug"
       responsive="sm"
+      :per-page="10"
+      :current-page="currentPage"
       empty-text="No spaces found!"
       show-empty
       striped
@@ -31,39 +40,43 @@
         span {{ row.item.lastUpdated | dateFormat('dd/MM/yyyy - HH:mm') }}
       template(slot="cell(actions)" slot-scope="row")
         BButton.mr-2(size="sm" :to="`/spaces/${row.item.slug}`" variant="primary") View
-        BButton(size="sm" @click="deleteSpace(row.item)" variant="danger") Delete
+        BButton(size="sm" @click="destroy(row.item)" variant="danger") Delete
 
     BModal(id="new-space-modal" title="Create New Space" size="lg" @hidden="resetNewSpace")
       BForm
-        BFormGroup(label="Slug" label-for="slug" label-cols="3")
+        BFormGroup(label="Slug" label-for="slug" label-cols="3" label-class="required-field")
           BFormInput(id="slug" v-model="newSpace.slug" :disabled="newSpaceSaving")
         BFormGroup(label="Property Number" label-for="propertyNumber" label-cols="3")
           BFormInput(id="propertyNumber" v-model="newSpace.propertyNumber" :disabled="newSpaceSaving")
         BFormGroup(label="Building Name" label-for="buildingName" label-cols="3")
           BFormInput(id="buildingName" v-model="newSpace.buildingName" :disabled="newSpaceSaving")
-        BFormGroup(label="Street Address" label-for="streetAddress" label-cols="3")
+        BFormGroup(label="Street Address" label-for="streetAddress" label-cols="3" label-class="required-field")
           BFormInput(id="streetAddress" v-model="newSpace.streetAddress" :disabled="newSpaceSaving")
-        BFormGroup(label="City" label-for="city" label-cols="3")
+        BFormGroup(label="City" label-for="city" label-cols="3" label-class="required-field")
           BFormInput(id="city" v-model="newSpace.city" :disabled="newSpaceSaving")
       .w-100(slot="modal-footer")
         SpinnerButton.float-right(@click="saveNewSpace" :disabled="newSpaceSaving" :loading="newSpaceSaving")
         BButton.float-right.mr-2(@click="$bvModal.hide('new-space-modal')" :disabled="newSpaceSaving")
           span Cancel
+
+    BPagination(
+      v-if="spaces.length > 10"
+      v-model="currentPage"
+      :total-rows="spaces.length"
+      :per-page="10"
+      aria-controls="spaces-table"
+    )
 </template>
 
 <script>
+import BaseCrud from '@/mixins/crud/index'
+
 export default {
   name: 'PageSpacesIndex',
 
-  transition: 'fade',
-
-  components: {
-    Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
-    SpinnerButton: () => import('@/components/elements/SpinnerButton'),
-  },
+  mixins: [BaseCrud('spaces')],
 
   data: () => ({
-    crumbs: [{ text: 'Spaces', active: true }],
     fields: [
       { key: 'slug', sortable: true },
       { key: 'propertyNumber', sortable: true },
@@ -74,8 +87,6 @@ export default {
       { key: 'lastUpdated', sortable: true },
       { key: 'actions', label: 'Actions' },
     ],
-    spaces: [],
-    isLoading: false,
     newSpace: {
       slug: null,
       propertyNumber: null,
@@ -84,49 +95,9 @@ export default {
       city: null,
     },
     newSpaceSaving: false,
-    loadingSpaces: false,
   }),
 
-  async asyncData ({ app: { $axios } }) {
-    const { data: spaces } = await $axios.get('/api/spaces')
-    return { spaces }
-  },
-
   methods: {
-    async getSpaces () {
-      this.loadingSpaces = true
-      this.spaces = []
-      const { data: spaces } = await this.$axios.get('/api/spaces')
-      this.spaces = spaces
-      this.loadingSpaces = false
-    },
-    async deleteSpace (space) {
-      const doDelete = await this.$bvModal.msgBoxConfirm(
-        `Are you sure you wish to delete this Space? This operation is irreversible!`,
-        {
-          title: 'Delete Space?',
-          size: 'md',
-          buttonSize: 'sm',
-          okVariant: 'danger',
-          okTitle: 'Delete',
-          hideHeaderClose: true,
-          centered: true,
-        }
-      )
-      if (doDelete) {
-        const {
-          data: { status },
-        } = await this.$axios.delete(`/api/spaces/${space.slug}`)
-        if (status === 'success') {
-          this.getSpaces()
-          this.$bvToast.toast('Space deleted successfully!', {
-            title: 'Success',
-            autoHideDelay: 5000,
-            variant: 'success',
-          })
-        }
-      }
-    },
     resetNewSpace () {
       this.newSpace = {
         slug: null,
@@ -149,7 +120,7 @@ export default {
             variant: 'success',
           })
           this.$bvModal.hide('new-space-modal')
-          this.getSpaces()
+          this.index()
         } else {
           throw new Error('error')
         }

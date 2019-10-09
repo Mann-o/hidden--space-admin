@@ -2,15 +2,24 @@
   .page-therapists-index
     Breadcrumbs(:crumbs="crumbs")
     .page-therapists-index__buttons
-      BButton.mr-2(v-b-modal.new-therapist-modal variant="primary") Create New Therapist
-      BButton(@click="getTherapists()" variant="primary") Refresh
+      BButton.mr-2(v-b-modal.new-therapist-modal variant="success") Create New Therapist
+      SpinnerButton(
+        @click="index()"
+        :disabled="indexing"
+        :loading="indexing"
+        label="Refresh"
+        label-when-loading="Refreshing"
+      )
 
     BTable(
-      :busy.sync="loadingTherapists"
+      id="therapists-table"
+      :busy.sync="indexing"
       :fields="fields"
       :items="therapists"
       primary-key="slug"
       responsive="sm"
+      :per-page="10"
+      :current-page="currentPage"
       empty-text="No therapists found!"
       show-empty
       striped
@@ -32,23 +41,23 @@
         span {{ row.item.lastUpdated | dateFormat('dd/MM/yyyy - HH:mm') }}
       template(slot="cell(actions)" slot-scope="row")
           BButton.mr-2(size="sm" :to="`/therapists/${row.item.slug}`" variant="primary") View
-          BButton(size="sm" @click="deleteTherapist(row.item)" variant="danger") Delete
+          BButton(size="sm" @click="destroy(row.item)" variant="danger") Delete
 
     BModal(id="new-therapist-modal" title="Create New Therapist" size="lg" @hidden="resetNewTherapist" scrollable)
       BForm
-        BFormGroup(label="Slug" label-for="slug" label-cols="3")
+        BFormGroup(label="Slug" label-for="slug" label-cols="3" label-class="required-field")
           BFormInput(id="slug" v-model="newTherapist.slug" required)
-        BFormGroup(label="Gender" label-for="gender" label-cols="3")
+        BFormGroup(label="Gender" label-for="gender" label-cols="3" label-class="required-field")
           BFormSelect(id="gender" v-model="newTherapist.gender" required)
             option(value="male") Male
             option(value="female") Female
-        BFormGroup(label="Title" label-for="title" label-cols="3")
+        BFormGroup(label="Title" label-for="title" label-cols="3" label-class="required-field")
           BFormInput(id="title" v-model="newTherapist.title" required)
-        BFormGroup(label="First Name(s)" label-for="firstNames" label-cols="3")
+        BFormGroup(label="First Name(s)" label-for="firstNames" label-cols="3" label-class="required-field")
           BFormInput(id="firstNames" v-model="newTherapist.firstNames" required)
-        BFormGroup(label="Last Name(s)" label-for="lastNames" label-cols="3")
+        BFormGroup(label="Last Name(s)" label-for="lastNames" label-cols="3" label-class="required-field")
           BFormInput(id="lastNames" v-model="newTherapist.lastNames" required)
-        BFormGroup(label="Email Address" label-for="emailAddress" label-cols="3")
+        BFormGroup(label="Email Address" label-for="emailAddress" label-cols="3" label-class="required-field")
           BFormInput(id="emailAddress" type="email" v-model="newTherapist.emailAddress" required)
         BFormGroup(label="Telephone Number" label-for="telephoneNumber" label-cols="3")
           BFormInput(id="telephoneNumber" v-model="newTherapist.telephoneNumber")
@@ -59,28 +68,34 @@
         BFormGroup(label="Biography" label-for="biography" label-cols="3")
           quill(id="biography" v-model="newTherapist.biography" output="html" :config="quillConfig")
       .w-100(slot="modal-footer")
-        BButton.float-right(@click="saveNewTherapist" variant="primary" :disabled="newTherapistSaving")
-          span {{ newTherapistSaving ? 'Saving' : 'Save' }}
-          BSpinner(v-if="newTherapistSaving" small)
+        SpinnerButton.float-right(@click="saveNewTherapist()" :disabled="newTherapistSaving" :loading="newTherapistSaving")
         BButton.float-right.mr-2(@click="$bvModal.hide('new-therapist-modal')" :disabled="newTherapistSaving")
           span Cancel
 
     ModalGallery(title="Select Therapist Profile Image" :selected="selectedImageId" @select="selectImage")
+
+    BPagination(
+      v-if="therapists.length > 10"
+      v-model="currentPage"
+      :total-rows="therapists.length"
+      :per-page="10"
+      aria-controls="therapists-table"
+    )
 </template>
 
 <script>
+import BaseCrud from '@/mixins/crud/index'
+
 export default {
   name: 'PageTherapistsIndex',
 
-  transition: 'fade',
+  mixins: [BaseCrud('therapists')],
 
   components: {
-    Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
     ModalGallery: () => import('@/components/ModalGallery'),
   },
 
   data: () => ({
-    crumbs: [{ text: 'Therapists', active: true }],
     fields: [
       { key: 'slug', sortable: true },
       { key: 'emailAddress', sortable: true },
@@ -94,7 +109,6 @@ export default {
       { key: 'lastUpdated', sortable: true },
       { key: 'actions', label: 'Actions' },
     ],
-    therapists: [],
     newTherapist: {
       slug: null,
       gender: 'male',
@@ -123,7 +137,6 @@ export default {
       theme: 'bubble',
     },
     selectedImage: null,
-    loadingTherapists: false,
   }),
 
   computed: {
@@ -132,44 +145,7 @@ export default {
     },
   },
 
-  async asyncData ({ app: { $axios } }) {
-    const { data: therapists } = await $axios.get('/api/therapists')
-    return { therapists }
-  },
-
   methods: {
-    async getTherapists () {
-      this.loadingTherapists = true
-      this.therapists = []
-      const { data: therapists } = await this.$axios.get('/api/therapists')
-      this.therapists = therapists
-      this.loadingTherapists = false
-    },
-    async deleteTherapist (therapist) {
-      const doDelete = await this.$bvModal.msgBoxConfirm(
-        `Are you sure you wish to delete this Therapist? This operation is irreversible!`,
-        {
-          title: 'Delete Therapist?',
-          size: 'md',
-          buttonSize: 'sm',
-          okVariant: 'danger',
-          okTitle: 'Delete',
-          hideHeaderClose: true,
-          centered: true,
-        }
-      )
-      if (doDelete) {
-        const { data: { status } } = await this.$axios.delete(`/api/therapists/${therapist.slug}`)
-        if (status === 'success') {
-          this.getTherapists()
-          this.$bvToast.toast('Therapist deleted successfully!', {
-            title: 'Success',
-            autoHideDelay: 5000,
-            variant: 'success',
-          })
-        }
-      }
-    },
     async saveNewTherapist () {
       try {
         this.newTherapistSaving = true
@@ -181,7 +157,7 @@ export default {
             variant: 'success',
           })
           this.$bvModal.hide('new-therapist-modal')
-          this.getTherapists()
+          this.index()
         } else {
           throw new Error('error')
         }

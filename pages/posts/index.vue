@@ -3,11 +3,18 @@
     Breadcrumbs(:crumbs="crumbs")
 
     .page-posts-index__buttons.pb-3
-      BButton(@click="getPosts()" variant="primary") Refresh
+      BButton.mr-2(v-b-modal.new-post-modal variant="success") Create New Post
+      SpinnerButton(
+        @click="index()"
+        :disabled="indexing"
+        :loading="indexing"
+        label="Refresh"
+        label-when-loading="Refreshing"
+      )
 
     BTable(
       id="posts-table"
-      :busy.sync="loadingPosts"
+      :busy.sync="indexing"
       :fields="fields"
       :items="posts"
       primary-key="slug"
@@ -35,7 +42,7 @@
         span {{ row.item.lastUpdated | dateFormat('dd/MM/yyyy - HH:mm') }}
       template(slot="cell(actions)" slot-scope="row")
         BButton.mr-2(size="sm" :to="`/posts/${row.item.slug}`" variant="primary") View
-        BButton(size="sm" variant="danger" @click="deletePost(row.item)") Delete
+        BButton(size="sm" variant="danger" @click="destroy(row.item)") Delete
     BPagination(
       v-if="posts.length > 10"
       v-model="currentPage"
@@ -46,17 +53,14 @@
 </template>
 
 <script>
+import BaseCrud from '@/mixins/crud/index'
+
 export default {
   name: 'PagePostsIndex',
 
-  transition: 'fade',
-
-  components: {
-    Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
-  },
+  mixins: [BaseCrud('posts')],
 
   data: () => ({
-    crumbs: [{ text: 'Posts', active: true }],
     fields: [
       { key: 'slug', sortable: true },
       { key: 'title', sortable: true },
@@ -65,24 +69,6 @@ export default {
       { key: 'lastUpdated', sortable: true },
       { key: 'actions', label: 'Actions' },
     ],
-    posts: [],
-    currentPage: 1,
-    loadingPosts: false,
   }),
-
-  async asyncData ({ app: { $axios } }) {
-    const { data: posts } = await $axios.get('/api/posts')
-    return { posts }
-  },
-
-  methods: {
-    async getPosts () {
-      this.loadingPosts = true
-      this.posts = []
-      const { data: posts } = await this.$axios.get('/api/posts')
-      this.posts = posts
-      this.loadingPosts = false
-    },
-  },
 }
 </script>

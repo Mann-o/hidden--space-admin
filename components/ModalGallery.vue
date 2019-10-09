@@ -10,17 +10,19 @@
     scrollable
   )
     .modal-gallery
-      BCard(
-        v-if="showGallery"
-        v-for="m in media"
-        :key="m.hash"
-        no-body
-      )
-        .modal-gallery__item(
-          :style="mediaStyle(m.url)"
-          :class="mediaClass(m.id)"
-          @click="$emit('select', m)"
+      .modal-gallery__items(v-if="!loadingMedia && media.length")
+        BCard(
+          v-if="media.length"
+          v-for="file in media"
+          :key="file.hash"
+          no-body
         )
+          .modal-gallery__item(
+            :style="mediaStyle(file.url)"
+            :class="mediaClass(file.id)"
+            @click="$emit('select', file)"
+          )
+      span(v-else) No media found!
 
       BSpinner(v-else variant="primary")
 </template>
@@ -42,20 +44,17 @@ export default {
   },
 
   data: () => ({
-    media: null,
+    media: [],
+    loadingMedia: false,
   }),
-
-  computed: {
-    showGallery () {
-      return ((this.media != null) && this.media.length)
-    },
-  },
 
   methods: {
     async loadMedia () {
+      this.loadingMedia = true
       this.media = []
       const { data: media } = await this.$axios.get('/api/media')
       this.media = media
+      this.loadingMedia = false
     },
     mediaStyle (url) {
       return { backgroundImage: `url(${url})` }

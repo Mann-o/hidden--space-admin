@@ -3,10 +3,17 @@
     Breadcrumbs(:crumbs="crumbs")
 
     .page-users-index__buttons
-      BButton(@click="getUsers()" variant="primary") Refresh
+      BButton.mr-2(v-b-modal.new-user-modal variant="success") Create New User
+      SpinnerButton(
+        @click="index()"
+        :disabled="indexing"
+        :loading="indexing"
+        label="Refresh"
+        label-when-loading="Refreshing"
+      )
 
     BTable(
-      :busy.sync="loadingUsers"
+      :busy.sync="indexing"
       :fields="fields"
       :items="users"
       primary-key="username"
@@ -28,21 +35,18 @@
         span {{ row.item.lastUpdated | dateFormat('dd/MM/yyyy - HH:mm') }}
       template(slot="cell(actions)" slot-scope="row")
         BButton.mr-2(size="sm" :to="`/users/${row.item.username}`" variant="primary") View
-        BButton(@click="deleteUser(row.item)" size="sm" variant="danger") Delete
+        BButton(@click="destroy(row.item)" size="sm" variant="danger") Delete
 </template>
 
 <script>
+import BaseCrud from '@/mixins/crud/index'
+
 export default {
   name: 'PageUsersIndex',
 
-  transition: 'fade',
-
-  components: {
-    Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
-  },
+  mixins: [BaseCrud('users')],
 
   data: () => ({
-    crumbs: [{ text: 'Users', active: true }],
     fields: [
       { key: 'username', sortable: true },
       { key: 'emailAddress', sortable: true },
@@ -50,49 +54,7 @@ export default {
       { key: 'lastUpdated', sortable: true },
       { key: 'actions', label: 'Actions' },
     ],
-    users: [],
-    loadingUsers: false,
   }),
-
-  async asyncData ({ app: { $axios } }) {
-    const { data: users } = await $axios.get('/api/users')
-    return { users }
-  },
-
-  methods: {
-    async getUsers () {
-      this.loadingUsers = true
-      this.users = []
-      const { data: users } = await this.$axios.get('/api/users')
-      this.users = users
-      this.loadingUsers = false
-    },
-    async deleteUser (user) {
-      const doDelete = await this.$bvModal.msgBoxConfirm(
-        `Are you sure you wish to delete this User? This operation is irreversible!`,
-        {
-          title: 'Delete User?',
-          size: 'md',
-          buttonSize: 'sm',
-          okVariant: 'danger',
-          okTitle: 'Delete',
-          hideHeaderClose: true,
-          centered: true,
-        }
-      )
-      if (doDelete) {
-        const { data: { status } } = await this.$axios.delete(`/api/users/${user.id}`)
-        if (status === 'success') {
-          this.getUsers()
-          this.$bvToast.toast('Therapist deleted successfully!', {
-            title: 'Success',
-            autoHideDelay: 5000,
-            variant: 'success',
-          })
-        }
-      }
-    },
-  },
 }
 </script>
 
