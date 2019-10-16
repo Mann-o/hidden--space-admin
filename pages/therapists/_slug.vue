@@ -34,9 +34,7 @@
             BFormGroup(label="Biography" label-for="biography" label-cols="2")
               quill(id="biography" v-model="therapist.biography" output="html" :config="quillConfig")
             BFormGroup
-              BButton(type="submit" variant="primary" :disabled="isSaving")
-                span Save Changes
-                BSpinner(v-if="isSaving" small)
+              SpinnerButton(type="submit" :disabled="isSaving" :loading="isSaving" label="Save Changes")
 
     ModalGallery(title="Select Therapist Profile Image" :selected="selectedImageId" @select="selectImage")
 </template>
@@ -50,6 +48,7 @@ export default {
   components: {
     Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
     ModalGallery: () => import('@/components/ModalGallery'),
+    SpinnerButton: () => import('@/components/elements/SpinnerButton'),
   },
 
   data: () => ({

@@ -18,9 +18,7 @@
             BFormGroup(label="City" label-for="city" label-cols="2")
               BFormInput(id="city" v-model="space.city")
             BFormGroup
-              BButton(type="submit" variant="primary" :disabled="isSaving")
-                span Save Changes
-                BSpinner(v-if="isSaving" small)
+              SpinnerButton(type="submit" :disabled="isSaving" :loading="isSaving" label="Save Changes")
 </template>
 
 <script>
@@ -31,6 +29,7 @@ export default {
 
   components: {
     Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
+    SpinnerButton: () => import('@/components/elements/SpinnerButton'),
   },
 
   data: () => ({

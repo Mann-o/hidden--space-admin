@@ -6,7 +6,7 @@
       BButton.mr-2(v-b-modal.new-user-modal variant="success") Create New User
       SpinnerButton(
         @click="index()"
-        :disabled="indexing"
+        :disabled="indexing || deleting"
         :loading="indexing"
         label="Refresh"
         label-when-loading="Refreshing"
@@ -34,8 +34,8 @@
       template(slot="cell(lastUpdated)" slot-scope="row")
         span {{ row.item.lastUpdated | dateFormat('dd/MM/yyyy - HH:mm') }}
       template(slot="cell(actions)" slot-scope="row")
-        BButton.mr-2(size="sm" :to="`/users/${row.item.username}`" variant="primary") View
-        BButton(@click="destroy(row.item)" size="sm" variant="danger") Delete
+        BButton.mr-2(size="sm" :to="`/users/${row.item.username}`" variant="primary" :disabled="deleting") View
+        BButton(@click="destroy(row.item)" size="sm" variant="danger" :disabled="deleting") Delete
 </template>
 
 <script>

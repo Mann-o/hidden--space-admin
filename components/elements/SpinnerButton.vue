@@ -1,6 +1,12 @@
 <template lang="pug">
-  BButton(@click="$emit('click')" :variant="variant" :disabled="disabled")
-    span {{ loading ? labelWhenLoading : label }}
+  BButton(
+    :type="type"
+    @click="$emit('click')"
+    :variant="variant"
+    :size="size"
+    :disabled="disabled"
+  )
+    span {{ buttonLabel }}
     BSpinner(v-if="loading" small)
 </template>
 
@@ -9,10 +15,20 @@ export default {
   name: 'SpinnerButton',
 
   props: {
+    type: {
+      type: String,
+      required: false,
+      default: 'button',
+    },
     variant: {
       type: String,
       required: false,
       default: 'primary',
+    },
+    size: {
+      type: String,
+      required: false,
+      default: 'md',
     },
     disabled: {
       type: Boolean,
@@ -33,6 +49,14 @@ export default {
       type: String,
       required: false,
       default: 'Saving',
+    },
+  },
+
+  computed: {
+    buttonLabel () {
+      return this.loading
+        ? this.labelWhenLoading
+        : this.label
     },
   },
 }

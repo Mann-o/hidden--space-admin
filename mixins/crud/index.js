@@ -16,6 +16,7 @@ export default (model) => ({
     [model]: [],
     indexing: false,
     currentPage: 1,
+    deleting: false,
   }),
 
   computed: {
@@ -27,8 +28,8 @@ export default (model) => ({
     },
   },
 
-  async asyncData ({ app: { $axios } }) {
-    const { data } = await $axios.get(`/api/${model}`)
+  async asyncData ({ app: { $api } }) {
+    const { data } = await $api[model].index()
     return { [model]: data }
   },
 
@@ -36,7 +37,7 @@ export default (model) => ({
     async index () {
       this.indexing = true
       this[model] = []
-      const { data } = await this.$axios.get(`/api/${model}`)
+      const { data } = await this.$api[model].index()
       this[model] = data
       if (this.shouldChangeToPreviousPage) {
         this.currentPage = this.currentPage - 1
@@ -56,8 +57,10 @@ export default (model) => ({
     },
     async destroy (item) {
       if (await this.confirmDelete()) {
-        const { data: { status } } = await this.$axios.delete(`/api/${model}/${item.id}`)
+        this.deleting = true
+        const { data: { status } } = await this.$api[model].delete(item.id)
         if (status === 'success') {
+          this.deleting = false
           this.index()
           this.$bvToast.toast('Deleted successfully!', {
             title: 'Success',

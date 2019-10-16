@@ -7,7 +7,7 @@
       BButton.mr-2(to="/media/upload" variant="success") Upload Media
       SpinnerButton(
         @click="index()"
-        :disabled="indexing"
+        :disabled="indexing || deleting"
         :loading="indexing"
         label="Refresh"
         label-when-loading="Refreshing"
@@ -39,8 +39,8 @@
       template(slot="cell(lastUpdated)" slot-scope="row")
         span {{ row.item.lastUpdated | dateFormat('dd/MM/yyyy - HH:mm') }}
       template(slot="cell(actions)" slot-scope="row")
-        BButton.mr-2(size="sm" :to="`/media/${row.item.hash}`" variant="primary") View
-        BButton(size="sm" @click="destroy(row.item)" variant="danger") Delete
+        BButton.mr-2(size="sm" :to="`/media/${row.item.hash}`" variant="primary" :disabled="deleting") View
+        BButton(size="sm" @click="destroy(row.item)" variant="danger" :disabled="deleting") Delete
 
     BPagination(
       v-if="media.length > 10"

@@ -37,5 +37,8 @@ export default {
     },
   },
 
-  plugins: [{ src: '@/plugins/axios' }],
+  plugins: [
+    { src: '@/plugins/auth/axios' },
+    { src: '@/plugins/auth/api' },
+  ],
 }

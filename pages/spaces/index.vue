@@ -6,7 +6,7 @@
       BButton.mr-2(v-b-modal.new-space-modal variant="success") Create New Space
       SpinnerButton(
         @click="index()"
-        :disabled="indexing"
+        :disabled="indexing || deleting"
         :loading="indexing"
         label="Refresh"
         label-when-loading="Refreshing"
@@ -39,8 +39,8 @@
       template(slot="cell(lastUpdated)" slot-scope="row")
         span {{ row.item.lastUpdated | dateFormat('dd/MM/yyyy - HH:mm') }}
       template(slot="cell(actions)" slot-scope="row")
-        BButton.mr-2(size="sm" :to="`/spaces/${row.item.slug}`" variant="primary") View
-        BButton(size="sm" @click="destroy(row.item)" variant="danger") Delete
+        BButton.mr-2(size="sm" :to="`/spaces/${row.item.slug}`" variant="primary" :disabled="deleting") View
+        BButton(size="sm" @click="destroy(row.item)" variant="danger" :disabled="deleting") Delete
 
     BModal(id="new-space-modal" title="Create New Space" size="lg" @hidden="resetNewSpace")
       BForm

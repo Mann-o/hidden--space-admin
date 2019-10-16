@@ -3,7 +3,7 @@
     BCard(title="Login")
       h3(slot="header") Hidden Space
       BCardText Please enter your login credentials to access the administrative interface.
-      BForm(@submit.prevent="doLogin" @reset="onReset")
+      BForm(@submit.prevent="doLogin()")
         BFormGroup(
           label="Login ID"
           label-for="loginId"
@@ -25,9 +25,13 @@
             placeholder="Enter Password"
             :disabled="isLoggingIn"
           )
-        BButton(type="submit" variant="primary" :disabled="isLoggingIn")
-          span Login
-          BSpinner(v-if="isLoggingIn" small style="margin-left:8px")
+        SpinnerButton(
+          type="submit"
+          :loading="isLoggingIn"
+          :disabled="isLoggingIn"
+          label="Login"
+          label-when-loading="Logging in"
+        )
 </template>
 
 <script>
@@ -40,8 +44,15 @@ export default {
 
   transition: 'fade',
 
+  components: {
+    SpinnerButton: () => import('@/components/elements/SpinnerButton'),
+  },
+
   computed: {
-    ...mapState('login', ['credentials', 'isLoggingIn']),
+    ...mapState('login', [
+      'credentials',
+      'isLoggingIn',
+    ]),
   },
 
   methods: {
@@ -54,18 +65,15 @@ export default {
     async doLogin () {
       this.startLoading()
       try {
-        await this.$auth.loginWith('local', { data: this.credentials })
+        await this.$api.auth.login({ data: this.credentials })
       } catch (error) {
-        this.$bvToast.toast(
-          'Invalid Login ID and/or password, please try again.',
-          {
-            title: 'Error',
-            autoHideDelay: 5000,
-            variant: 'danger',
-          }
-        )
+        this.$bvToast.toast('Invalid Login ID and/or password, please try again.', {
+          title: 'Error',
+          autoHideDelay: 5000,
+          variant: 'danger',
+        })
+        this.stopLoading()
       }
-      this.stopLoading()
     },
     onReset () {
       alert('reset')

@@ -20,6 +20,7 @@ export default {
 
 <style lang="stylus">
 @import '~assets/styles/core/helpers/required-fields'
+@import '~assets/styles/core/helpers/bootstrap-overrides'
 @import '~assets/styles/core/animation/fade'
 @import '~assets/styles/vendor/quill'
 </style>

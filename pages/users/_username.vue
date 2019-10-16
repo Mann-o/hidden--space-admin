@@ -16,9 +16,7 @@
             BFormGroup(label="Last Logged In" label-for="lastLoggedIn" label-cols="2")
               BFormInput(id="username" v-model="lastLoggedIn" disabled)
             BFormGroup
-              BButton(type="submit" variant="primary" :disabled="isSaving")
-                span Save Changes
-                BSpinner(v-if="isSaving" small)
+              SpinnerButton(type="submit" :disabled="isSaving" :loading="isSaving" label="Save Changes")
 </template>
 
 <script>
@@ -30,6 +28,7 @@ export default {
 
   components: {
     Breadcrumbs: () => import('@/components/layout/Breadcrumbs'),
+    SpinnerButton: () => import('@/components/elements/SpinnerButton'),
   },
 
   mixins: [

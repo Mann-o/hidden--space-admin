@@ -6,7 +6,7 @@
       BButton.mr-2(v-b-modal.new-post-modal variant="success") Create New Post
       SpinnerButton(
         @click="index()"
-        :disabled="indexing"
+        :disabled="indexing || deleting"
         :loading="indexing"
         label="Refresh"
         label-when-loading="Refreshing"
@@ -41,8 +41,8 @@
       template(slot="cell(lastUpdated)" slot-scope="row")
         span {{ row.item.lastUpdated | dateFormat('dd/MM/yyyy - HH:mm') }}
       template(slot="cell(actions)" slot-scope="row")
-        BButton.mr-2(size="sm" :to="`/posts/${row.item.slug}`" variant="primary") View
-        BButton(size="sm" variant="danger" @click="destroy(row.item)") Delete
+        BButton.mr-2(size="sm" :to="`/posts/${row.item.slug}`" variant="primary" :disabled="deleting") View
+        BButton(size="sm" variant="danger" @click="destroy(row.item)" :disabled="deleting") Delete
     BPagination(
       v-if="posts.length > 10"
       v-model="currentPage"
