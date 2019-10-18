@@ -20,10 +20,10 @@
             SpinnerButton(type="submit" :disabled="isSaving" :loading="isSaving" label="Save Changes")
 
       BCard(header="Media" header-tag="h6")
-          BButton.mr-2(v-b-modal.browse-images-modal variant="success") Add Images
-          BButton(variant="danger" v-if="hasImagesSelected" @click="removeSelectedImages") Remove ({{ selectedImagesCount }})
-          Gallery(v-if="images.length" :items="images" @toggle="toggle" padded)
-          BAlert.gallery__empty(v-else variant="warning" show) No images have been added yet!
+        BButton.mr-2(v-b-modal.browse-images-modal variant="success") Add Images
+        BButton(variant="danger" v-if="hasImagesSelected" @click="removeSelectedImages") Remove ({{ selectedImagesCount }})
+        Gallery(v-if="images.length" :items="images" @toggle="toggle" padded)
+        BAlert.gallery__empty(v-else variant="warning" show) No images have been added yet!
 
     ModalGallery(
       title="Select Images"
