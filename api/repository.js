@@ -7,15 +7,23 @@ export default ($axios) => (resource) => ({
     return $axios.post(`/api/${resource}`, payload)
   },
 
-  show (id) {
-    return $axios.get(`/api/${resource}/${id}`)
+  show (identifier) {
+    return $axios.get(`/api/${resource}/${identifier}`)
   },
 
-  update (id) {
-    return $axios.patch(`/api/${resource}/${id}`)
+  update (identifier, payload) {
+    return $axios.patch(`/api/${resource}/${identifier}`, payload)
   },
 
-  delete (id) {
-    return $axios.delete(`/api/${resource}/${id}`)
+  delete (identifier) {
+    return $axios.delete(`/api/${resource}/${identifier}`)
+  },
+
+  addImages (identifier, payload) {
+    return $axios.post(`/api/${resource}/${identifier}/images`, payload)
+  },
+
+  removeImages (identifier, payload) {
+    return $axios.post(`/api/${resource}/${identifier}/images/remove`, payload)
   },
 })

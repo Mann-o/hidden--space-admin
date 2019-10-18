@@ -1,5 +1,6 @@
 <template lang="pug">
   .layout-default
+    ConnectivityMonitor
     MainNavigation
 
     BContainer(fluid)
@@ -14,6 +15,7 @@ export default {
 
   components: {
     MainNavigation: () => import('@/components/layout/MainNavigation'),
+    ConnectivityMonitor: () => import('@/components/utilities/ConnectivityMonitor'),
   },
 }
 </script>

@@ -90,7 +90,7 @@ export default {
   name: 'PageTherapistsIndex',
 
   components: {
-    ModalGallery: () => import('@/components/ModalGallery'),
+    ModalGallery: () => import('@/components/elements/gallery/ModalGallery'),
   },
 
   mixins: [index('therapists')],
