@@ -29,6 +29,9 @@
         .text-center.text-info.my-2
           BSpinner.align-middle
           strong.ml-2 Fetching users...
+      template(slot="cell(lastLoggedIn)" slot-scope="row")
+        span(v-if="row.item.lastLoggedIn != null") {{ row.item.lastLoggedIn | dateFormat('dd/MM/yyyy - HH:mm') }}
+        span(v-else) -
       template(slot="cell(created)" slot-scope="row")
         span {{ row.item.created | dateFormat('dd/MM/yyyy - HH:mm') }}
       template(slot="cell(lastUpdated)" slot-scope="row")
@@ -50,6 +53,7 @@ export default {
     fields: [
       { key: 'username', sortable: true },
       { key: 'emailAddress', sortable: true },
+      { key: 'lastLoggedIn', sortable: true },
       { key: 'created', sortable: true },
       { key: 'lastUpdated', sortable: true },
       { key: 'actions', label: 'Actions' },

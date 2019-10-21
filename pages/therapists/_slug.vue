@@ -6,25 +6,23 @@
     BCardGroup(deck)
       BCard(header="Information" header-tag="h6")
         BForm(@submit.prevent="save")
-          BFormGroup(label="Slug" label-for="slug" label-cols="2")
+          BFormGroup(label="Slug" label-for="slug" label-cols="3")
             BFormInput(id="slug" v-model="therapist.slug")
-          BFormGroup(label="Gender" label-for="gender" label-cols="2")
-            BFormSelect(id="gender" v-model="therapist.gender" required)
-              option(value="male") Male
-              option(value="female") Female
-          BFormGroup(label="Title" label-for="title" label-cols="2")
+          BFormGroup(label="Gender" label-for="gender" label-cols="3")
+            BFormRadioGroup(style="margin-top:6px" id="gender" v-model="therapist.gender" :options="genderOptions")
+          BFormGroup(label="Title" label-for="title" label-cols="3")
             BFormInput(id="title" v-model="therapist.title" required)
-          BFormGroup(label="First Name(s)" label-for="firstNames" label-cols="2")
+          BFormGroup(label="First Name(s)" label-for="firstNames" label-cols="3")
             BFormInput(id="firstNames" v-model="therapist.firstNames" required)
-          BFormGroup(label="Last Name(s)" label-for="lastNames" label-cols="2")
+          BFormGroup(label="Last Name(s)" label-for="lastNames" label-cols="3")
             BFormInput(id="lastNames" v-model="therapist.lastNames" required)
-          BFormGroup(label="Email Address" label-for="emailAddress" label-cols="2")
+          BFormGroup(label="Email Address" label-for="emailAddress" label-cols="3")
             BFormInput(id="emailAddress" type="email" v-model="therapist.emailAddress" required)
-          BFormGroup(label="Telephone Number" label-for="telephoneNumber" label-cols="2")
+          BFormGroup(label="Telephone Number" label-for="telephoneNumber" label-cols="3")
             BFormInput(id="telephoneNumber" v-model="therapist.telephoneNumber")
-          BFormGroup(label="Biography" label-for="biography" label-cols="2")
+          BFormGroup(label="Biography" label-for="biography" label-cols="3")
             quill(id="biography" v-model="therapist.biography" output="html" :config="quillConfig")
-          BFormGroup
+          BFormGroup(label-cols="3")
             SpinnerButton(type="submit" :disabled="isSaving" :loading="isSaving" label="Save Changes")
 
       BCard(header="Media" header-tag="h6")
@@ -64,6 +62,10 @@ export default {
       },
       theme: 'bubble',
     },
+    genderOptions: [
+      { text: 'Male', value: 'male' },
+      { text: 'Female', value: 'female' },
+    ],
   }),
 }
 </script>

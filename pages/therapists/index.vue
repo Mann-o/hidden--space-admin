@@ -48,9 +48,7 @@
         BFormGroup(label="Slug" label-for="slug" label-cols="3" label-class="required-field")
           BFormInput(id="slug" v-model="newTherapist.slug" required)
         BFormGroup(label="Gender" label-for="gender" label-cols="3" label-class="required-field")
-          BFormSelect(id="gender" v-model="newTherapist.gender" required)
-            option(value="male") Male
-            option(value="female") Female
+          BFormRadioGroup(style="margin-top:6px" id="gender" v-model="newTherapist.gender" :options="genderOptions")
         BFormGroup(label="Title" label-for="title" label-cols="3" label-class="required-field")
           BFormInput(id="title" v-model="newTherapist.title" required)
         BFormGroup(label="First Name(s)" label-for="firstNames" label-cols="3" label-class="required-field")
@@ -61,18 +59,12 @@
           BFormInput(id="emailAddress" type="email" v-model="newTherapist.emailAddress" required)
         BFormGroup(label="Telephone Number" label-for="telephoneNumber" label-cols="3")
           BFormInput(id="telephoneNumber" v-model="newTherapist.telephoneNumber")
-        BFormGroup(label="Profile Image" label-for="imageId" label-cols="3")
-          img(v-if="selectedImage != null" :src="selectedImage.url" style="max-width:4rem;max-height:4rem;margin-right:2rem" @click="selectedImage = null")
-          BButton(v-b-modal.browse-images-modal variant="primary") {{ selectedImage != null ? 'Change' : 'Browse' }}...
-          BFormInput(id="imageId" v-model="newTherapist.imageId" hidden)
         BFormGroup(label="Biography" label-for="biography" label-cols="3")
           quill(id="biography" v-model="newTherapist.biography" output="html" :config="quillConfig")
       .w-100(slot="modal-footer")
         SpinnerButton.float-right(@click="saveNewTherapist()" :disabled="newTherapistSaving" :loading="newTherapistSaving")
         BButton.float-right.mr-2(@click="$bvModal.hide('new-therapist-modal')" :disabled="newTherapistSaving")
           span Cancel
-
-    ModalGallery(title="Select Therapist Profile Image" :selected="selectedImageId" @select="selectImage")
 
     BPagination(
       v-if="therapists.length > 10"
@@ -118,7 +110,6 @@ export default {
       emailAddress: null,
       telephoneNumber: null,
       biography: null,
-      imageId: null,
     },
     newTherapistSaving: false,
     quillConfig: {
@@ -136,7 +127,10 @@ export default {
       },
       theme: 'bubble',
     },
-    selectedImage: null,
+    genderOptions: [
+      { text: 'Male', value: 'male' },
+      { text: 'Female', value: 'female' },
+    ],
   }),
 
   computed: {
