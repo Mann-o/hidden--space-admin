@@ -44,6 +44,11 @@ export default {
     handleSuccess,
   ],
 
+  async asyncData ({ app: { $axios }, params }) {
+    const { data: user } = await $axios.get(`/api/users/${params.username}`)
+    return { user }
+  },
+
   data: () => ({
     user: null,
     resetPasswordForm: {
@@ -69,11 +74,6 @@ export default {
         ? this.$options.filters.dateFormat(this.user.lastLoggedIn, 'dd/MM/yyyy - HH:mm')
         : 'N/A'
     },
-  },
-
-  async asyncData ({ app: { $axios }, params }) {
-    const { data: user } = await $axios.get(`/api/users/${params.username}`)
-    return { user }
   },
 
   methods: {

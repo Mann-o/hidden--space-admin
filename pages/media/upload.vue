@@ -68,7 +68,7 @@ export default {
             title: 'Upload Success',
             variant: 'success',
             autoHideDelay: 5000,
-          }
+          },
         )
         this.files = null
       } else {

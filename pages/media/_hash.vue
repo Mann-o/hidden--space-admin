@@ -37,7 +37,7 @@ export default {
   mixins: [update('media', 'hash', 'fullFilename', false)],
 
   computed: {
-    percentageDifference() {
+    percentageDifference () {
       return `-${((this.media.bytesSaved / this.media.originalSize) * 100).toFixed()}%`
     },
   },

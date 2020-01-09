@@ -15,6 +15,17 @@ export default {
     ModelCounters: () => import('@/components/page/index/ModelCounters'),
   },
 
+  async asyncData ({ app: { $axios } }) {
+    const { data: { spaceCount, therapistCount, postCount, userCount, mediaCount } } = await $axios.get('/api/')
+    return {
+      spaceCount,
+      therapistCount,
+      postCount,
+      userCount,
+      mediaCount,
+    }
+  },
+
   data: () => ({
     spaceCount: 0,
     therapistCount: 0,
@@ -33,17 +44,6 @@ export default {
         { to: '/media', label: 'Media', count: this.mediaCount },
       ]
     },
-  },
-
-  async asyncData ({ app: { $axios } }) {
-    const { data: { spaceCount, therapistCount, postCount, userCount, mediaCount } } = await $axios.get('/api/')
-    return {
-      spaceCount,
-      therapistCount,
-      postCount,
-      userCount,
-      mediaCount,
-    }
   },
 }
 </script>
