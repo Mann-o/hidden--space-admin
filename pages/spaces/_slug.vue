@@ -38,7 +38,7 @@ import update from '@/mixins/crud/update'
 export default {
   name: 'PageSpacesSlug',
 
-  mixins: [update('space', 'slug', 'address')],
+  mixins: [update('space', 'slug', 'id', 'address')],
 }
 </script>
 

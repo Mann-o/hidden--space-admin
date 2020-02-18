@@ -58,16 +58,19 @@ export default (model) => ({
     async destroy (item) {
       if (await this.confirmDelete()) {
         this.deleting = true
-        const { data: { status } } = await this.$api[model].delete(item.id)
+        const { data: { status, message } } = await this.$api[model].delete(item.id)
+        this.deleting = false
         if (status === 'success') {
-          this.deleting = false
           this.index()
-          this.$bvToast.toast('Deleted successfully!', {
-            title: 'Success',
-            autoHideDelay: 5000,
-            variant: 'success',
-          })
         }
+        this.$bvToast.toast(
+          (status === 'success' ? 'Deleted successfully!' : message),
+          {
+            title: status.charAt(0).toUpperCase() + status.slice(1),
+            autoHideDelay: 5000,
+            variant: (status === 'success') ? 'success' : 'danger',
+          },
+        )
       }
     },
   },

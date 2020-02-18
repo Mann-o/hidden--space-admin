@@ -1,6 +1,6 @@
 import { omit } from 'lodash'
 
-export default (model, identifier, label, isPluralised = true) => ({
+export default (model, clientIdentifier, serverIdentifier, label, isPluralised = true) => ({
   transition: 'fade',
 
   components: {
@@ -19,7 +19,10 @@ export default (model, identifier, label, isPluralised = true) => ({
   computed: {
     crumbs () {
       return [
-        { text: model.charAt(0).toUpperCase() + model.slice(1), to: `/${model}${isPluralised ? 's' : ''}` },
+        {
+          text: model.charAt(0).toUpperCase() + model.slice(1) + (isPluralised ? 's' : ''),
+          to: `/${model}${isPluralised ? 's' : ''}`,
+        },
         {
           text: this[model] == null ? '' : this[model][label],
           active: true,
@@ -35,7 +38,7 @@ export default (model, identifier, label, isPluralised = true) => ({
   },
 
   async asyncData ({ app: { $api }, params }) {
-    const { data } = await $api[`${model}${isPluralised ? 's' : ''}`].show(params[identifier])
+    const { data } = await $api[`${model}${isPluralised ? 's' : ''}`].show(params[clientIdentifier])
     const images = (data.images)
       ? data.images.map((image) => ({ ...image, selected: false }))
       : []
@@ -46,7 +49,7 @@ export default (model, identifier, label, isPluralised = true) => ({
     async save () {
       this.isSaving = true
       try {
-        const { data } = await this.$api[`${model}${isPluralised ? 's' : ''}`].update(this[model].id, this[model])
+        const { data } = await this.$api[`${model}${isPluralised ? 's' : ''}`].update(this[model][serverIdentifier || 'id'], this[model])
         if (data.status === 'success') {
           this[model] = data[model]
           this.$bvToast.toast('Update successfully!', {
@@ -58,7 +61,7 @@ export default (model, identifier, label, isPluralised = true) => ({
           throw new Error('error')
         }
       } catch (error) {
-        this.$bvToast.toast('Updated failed - please try again.', {
+        this.$bvToast.toast('Update failed - please try again.', {
           title: 'Error',
           autoHideDelay: 5000,
           variant: 'danger',

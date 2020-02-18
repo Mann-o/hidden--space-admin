@@ -34,7 +34,7 @@ import update from '@/mixins/crud/update'
 export default {
   name: 'PageMediaHash',
 
-  mixins: [update('media', 'hash', 'fullFilename', false)],
+  mixins: [update('media', 'hash', 'hash', 'fullFilename', false)],
 
   computed: {
     percentageDifference () {

@@ -44,7 +44,7 @@ import update from '@/mixins/crud/update'
 export default {
   name: 'PageTherapistsSlug',
 
-  mixins: [update('therapist', 'slug', 'fullNameWithTitle')],
+  mixins: [update('therapist', 'slug', 'id', 'fullNameWithTitle')],
 
   data: () => ({
     quillConfig: {

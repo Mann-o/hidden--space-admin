@@ -35,7 +35,7 @@ import update from '@/mixins/crud/update'
 export default {
   name: 'PagePostsSlug',
 
-  mixins: [update('post', 'slug', 'title')],
+  mixins: [update('post', 'slug', 'id', 'title')],
 
   data: () => ({
     authors: [],
