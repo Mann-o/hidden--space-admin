@@ -29,6 +29,8 @@
         .text-center.text-info.my-2
           BSpinner.align-middle
           strong.ml-2 Fetching users...
+      template(slot="cell(username)" slot-scope="row")
+        nuxt-link(:to="`/users/${row.item.username}`") {{ row.item.username }}
       template(slot="cell(lastLoggedIn)" slot-scope="row")
         span(v-if="row.item.lastLoggedIn != null") {{ row.item.lastLoggedIn | dateFormat('dd/MM/yyyy - HH:mm') }}
         span(v-else) -
