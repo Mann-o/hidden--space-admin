@@ -39,6 +39,21 @@
       template(slot="cell(actions)" slot-scope="row")
         BButton.mr-2(size="sm" :to="`/users/${row.item.username}`" variant="primary" :disabled="deleting") View
         BButton(@click="destroy(row.item)" size="sm" variant="danger" :disabled="deleting") Delete
+
+    BModal(id="new-user-modal" title="Create New User" size="lg" @hidden="resetNewUser" scrollable)
+      BForm
+        BFormGroup(label="Username" label-for="username" label-cols="3" label-class="required-field")
+          BFormInput(id="username" v-model="newUser.username" required)
+        BFormGroup(label="Email Address" label-for="emailAddress" label-cols="3" label-class="required-field")
+          BFormInput(type="email" id="emailAddress" v-model="newUser.emailAddress" required)
+        BFormGroup(label="Password" label-for="password" label-cols="3" label-class="required-field")
+          BFormInput(type="password" id="password" v-model="newUser.password" required)
+        BFormGroup(label="Re-enter Password" label-for="passwordConfirmation" label-cols="3" label-class="required-field")
+          BFormInput(type="password" id="passwordConfirmation" v-model="newUser.passwordConfirmation" required)
+      .w-100(slot="modal-footer")
+        SpinnerButton.float-right(@click="saveNewUser()" :disabled="newUserSaving" :loading="newUserSaving")
+        BButton.float-right.mr-2(@click="$bvModal.hide('new-user-modal')" :disabled="newUserSaving")
+          span Cancel
 </template>
 
 <script>
@@ -58,7 +73,50 @@ export default {
       { key: 'lastUpdated', sortable: true },
       { key: 'actions', label: 'Actions' },
     ],
+    newUser: {
+      username: null,
+      emailAddress: null,
+      password: null,
+      passwordConfirmation: null,
+    },
+    newUserSaving: false,
   }),
+
+  methods: {
+    async saveNewUser () {
+      try {
+        this.newUserSaving = true
+        const { data: { status } } = await this.$axios.post('/api/users', this.newUser)
+        if (status === 'success') {
+          this.$bvToast.toast('User created successfully!', {
+            title: 'Success',
+            autoHideDelay: 5000,
+            variant: 'success',
+          })
+          this.$bvModal.hide('new-user-modal')
+          this.index()
+        } else {
+          throw new Error('error')
+        }
+      } catch (error) {
+        this.$bvToast.toast('An error occurred whilst trying to save this User.', {
+          title: 'Error',
+          autoHideDelay: 5000,
+          variant: 'danger',
+        })
+      } finally {
+        this.newUserSaving = false
+      }
+    },
+    resetNewUser () {
+      this.newUser = {
+        username: null,
+        emailAddress: null,
+        password: null,
+        passwordConfirmation: null,
+      }
+    },
+  },
 }
 </script>
 
