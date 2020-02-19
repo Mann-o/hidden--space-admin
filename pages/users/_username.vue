@@ -19,9 +19,9 @@
       BCard(header="Reset Password" header-tag="h6")
         BForm(@submit.prevent="resetPassword")
           BFormGroup(label="New Password" label-for="newPassword" label-cols="3")
-            BFormInput(id="newPassword" v-model="resetPasswordForm.newPassword")
+            BFormInput(type="password" id="newPassword" v-model="resetPasswordForm.newPassword")
           BFormGroup(label="Re-enter New Password" label-for="newPasswordConfirmation" label-cols="3")
-            BFormInput(id="newPasswordConfirmation" v-model="resetPasswordForm.newPasswordConfirmation")
+            BFormInput(type="password" id="newPasswordConfirmation" v-model="resetPasswordForm.newPasswordConfirmation")
           BFormGroup(label-cols="3")
             SpinnerButton(type="submit" :disabled="isResettingPassword" :loading="isResettingPassword" label="Save New Password")
           //- BAlert(variant="info" show) Functionality currently disabled, coming soon!
