@@ -49,8 +49,8 @@
           BFormInput(id="slug" v-model="newTherapist.slug" required)
         BFormGroup(label="Gender" label-for="gender" label-cols="3" label-class="required-field")
           BFormRadioGroup(style="margin-top:6px" id="gender" v-model="newTherapist.gender" :options="genderOptions")
-        BFormGroup(label="Title" label-for="title" label-cols="3" label-class="required-field")
-          BFormInput(id="title" v-model="newTherapist.title" required)
+        BFormGroup(label="Treatment" label-for="title" label-cols="3" label-class="required-field")
+          BFormInput(id="treatment" v-model="newTherapist.treatment" required)
         BFormGroup(label="First Name(s)" label-for="firstNames" label-cols="3" label-class="required-field")
           BFormInput(id="firstNames" v-model="newTherapist.firstNames" required)
         BFormGroup(label="Last Name(s)" label-for="lastNames" label-cols="3" label-class="required-field")
@@ -91,7 +91,7 @@ export default {
     fields: [
       { key: 'slug', sortable: true },
       { key: 'emailAddress', sortable: true },
-      { key: 'title', sortable: true },
+      { key: 'treatment', sortable: true },
       { key: 'firstNames', sortable: true },
       { key: 'lastNames', sortable: true },
       { key: 'gender', sortable: true },
@@ -104,7 +104,7 @@ export default {
     newTherapist: {
       slug: null,
       gender: 'male',
-      title: null,
+      treatment: null,
       firstNames: null,
       lastNames: null,
       emailAddress: null,
@@ -173,7 +173,7 @@ export default {
       this.newTherapist = {
         slug: null,
         gender: 'male',
-        title: null,
+        treatment: null,
         firstNames: null,
         lastNames: null,
         emailAddress: null,
