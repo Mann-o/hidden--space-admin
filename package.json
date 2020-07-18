@@ -31,7 +31,7 @@
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.5.0",
     "date-fns": "^2.10.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "nuxt": "npm:nuxt-edge",
     "vue-quill": "^1.5.1"
   },
